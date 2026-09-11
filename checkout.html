@@ -66,11 +66,11 @@
     <div>
       <div class="display" style="font-size:17px;font-weight:700;margin-bottom:14px;">3. Shipping Method</div>
       <div style="display:flex;flex-direction:column;gap:10px;">
-        <div class="pay-option selected" data-ship="8.00" onclick="selectShip(this)">
+        <div class="pay-option selected" data-ship="8.00" data-ship-label="USPS Ground Advantage" onclick="selectShip(this)">
           <div style="display:flex;align-items:center;gap:10px;"><div style="width:16px;height:16px;border-radius:999px;border:5px solid var(--coral);"></div><span style="font-weight:600;font-size:14px;">USPS Ground Advantage — 3–5 business days</span></div>
           <span style="font-weight:700;font-size:14px;">$8.00</span>
         </div>
-        <div class="pay-option" data-ship="19.50" onclick="selectShip(this)">
+        <div class="pay-option" data-ship="19.50" data-ship-label="UPS 2-Day" onclick="selectShip(this)">
           <div style="display:flex;align-items:center;gap:10px;"><div style="width:16px;height:16px;border-radius:999px;border:1.5px solid var(--line);"></div><span style="font-weight:600;font-size:14px;">UPS 2-Day</span></div>
           <span style="font-weight:700;font-size:14px;">$19.50</span>
         </div>
@@ -79,26 +79,14 @@
 
     <div>
       <div class="display" style="font-size:17px;font-weight:700;margin-bottom:14px;">4. Payment</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
-        <button type="button" style="background:#000;color:#fff;border:none;border-radius:10px;padding:13px 0;font-weight:700;font-size:14px;cursor:pointer;">🍎 Pay</button>
-        <button type="button" style="background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:13px 0;font-weight:700;font-size:14px;cursor:pointer;">G Pay</button>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-        <div style="flex:1;height:1px;background:var(--line);"></div><span style="font-size:12px;color:var(--ink-soft);">or pay by card</span><div style="flex:1;height:1px;background:var(--line);"></div>
-      </div>
-      <input class="field" placeholder="Card number" style="margin-bottom:10px;"/>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <input class="field" placeholder="MM / YY" />
-        <input class="field" placeholder="CVC" />
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;margin-top:12px;">
-        <svg width="30" height="20" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="3" fill="var(--coral)"/></svg>
-        <span style="font-size:12px;color:var(--ink-soft);">Payments processed securely by Stripe</span>
+      <div style="display:flex;align-items:center;gap:8px;">
+              <svg width="30" height="20" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="3" fill="var(--coral)"/></svg>svg>
+              <span style="font-size:13px;color:var(--ink-soft);">You'll enter your card on Stripe's secure page next. We never see or store your card details.</span>span>
       </div>
     </div>
-
-    <button type="button" class="btn btn-primary" id="place-order-btn" style="padding:18px 0;font-size:16.5px;" onclick="placeOrder()"><span>Pay <span id="pay-amount">$0.00</span> &amp; Place Order</span></button>
-    <div style="font-size:12px;color:var(--ink-soft);text-align:center;">Demo storefront — no live payment processor is connected. This button does not charge a card.</div>
+  
+      <button type="button" class="btn btn-primary" id="place-order-btn" style="padding:18px 0;font-size:16.5px;" onclick="placeOrder()"><span id="place-order-label">Continue to Payment — <span id="pay-amount">$0.00</span>span></span>span></button>button>
+      <div id="checkout-error" style="font-size:13px;color:var(--coral-dark);text-align:center;display:none;"></div>
   </div>
 
   <div class="card" id="checkout-summary" style="padding:26px;position:sticky;top:20px;">
@@ -133,6 +121,7 @@
 <script src="js/cart.js"></script>
 <script>
 let shipCost = 8.00;
+  let shipLabel = 'USPS Ground Advantage';
 
 function selectShip(el) {
   document.querySelectorAll('.pay-option').forEach(o => {
@@ -142,6 +131,7 @@ function selectShip(el) {
   el.classList.add('selected');
   el.querySelector('div div').style.border = '5px solid var(--coral)';
   shipCost = parseFloat(el.dataset.ship);
+  shipLabel = el.dataset.shipLabel;
   renderCheckoutSummary();
 }
 
@@ -171,10 +161,37 @@ function renderCheckoutSummary() {
   document.getElementById('pay-amount').textContent = `$${total.toFixed(2)}`;
 }
 
-function placeOrder() {
-  showToast('Demo checkout — no payment processor connected yet.');
-}
+async function placeOrder() {
+    const cart = getCart();
+    if (cart.length === 0) return;
+    const btn = document.getElementById('place-order-btn');
+    const label = document.getElementById('place-order-label');
+    const errEl = document.getElementById('checkout-error');
+    errEl.style.display = 'none';
+    btn.disabled = true;
+    label.textContent = 'Redirecting to Stripe…';
 
+    try {
+          const res = await fetch('/api/create-checkout-session', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                            items: cart.map(i => ({ title: i.title, unitPrice: i.unitPrice, qty: i.qty })),
+                            shipping: { label: shipLabel, amount: shipCost }
+                  })
+          });
+          const data = await res.json();
+          if (!res.ok || !data.url) throw new Error(data.error || 'Checkout failed.');
+          window.location = data.url;
+    } catch (err) {
+          const { subtotal } = cartTotals();
+          errEl.textContent = err.message || 'Something went wrong. Try again.';
+          errEl.style.display = 'block';
+          btn.disabled = false;
+          label.innerHTML = `Continue to Payment — <span id="pay-amount">$${(subtotal + shipCost).toFixed(2)}</span>`;
+    }
+}
+  
 document.addEventListener('DOMContentLoaded', renderCheckoutSummary);
 </script>
 </body>
