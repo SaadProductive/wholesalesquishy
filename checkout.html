@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checkout | WholesaleSquishy</title>
+<meta name="description" content="Checkout for your WholesaleSquishy bulk squishy toy order.">
+<link rel="canonical" href="https://wholesalesquishy.com/checkout.html">
+<link rel="icon" href="images/logo-mark.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .field{border:1.5px solid var(--line);border-radius:10px;padding:13px 14px;font-size:14px;font-family:'Plus Jakarta Sans';width:100%;background:#fff;}
+  .pay-option{border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:border-color .15s ease;}
+  .pay-option:hover{border-color:var(--coral);}
+  .pay-option.selected{border-color:var(--coral);background:var(--coral-tint);}
+  .summary-line{display:flex;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:14px;}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-brand"><img src="images/logo-mark.svg" alt="WholesaleSquishy logo"><span>WholesaleSquishy</span></a>
+  <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-soft);font-weight:600;">
+    <a href="cart.html" style="color:var(--coral-dark);">Cart</a> <span>—</span> <span style="color:var(--ink);">Checkout</span> <span>—</span> <span>Confirmation</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-soft);">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="4" y="10" width="16" height="10" rx="2" stroke="var(--ink-soft)" stroke-width="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="var(--ink-soft)" stroke-width="2"/></svg>
+    256-bit SSL
+  </div>
+</nav>
+
+<div id="empty-checkout" class="wrap" style="display:none;text-align:center;padding:100px 64px;">
+  <div class="display" style="font-size:22px;font-weight:700;margin-bottom:10px;">Nothing to check out yet</div>
+  <div style="font-size:15px;color:var(--ink-soft);margin-bottom:24px;">Your cart is empty — add a case first.</div>
+  <a href="index.html#bestsellers" class="btn btn-primary">Shop Best Sellers</a>
+</div>
+
+<div id="checkout-grid" class="wrap rg" style="max-width:1160px;padding:48px 64px 80px 64px;display:grid;grid-template-columns:1.4fr 1fr;gap:50px;align-items:start;">
+
+  <div style="display:flex;flex-direction:column;gap:28px;">
+
+    <div>
+      <div class="display" style="font-size:17px;font-weight:700;margin-bottom:14px;">1. Contact</div>
+      <input class="field" placeholder="Email address" />
+      <div style="display:flex;align-items:center;gap:8px;margin-top:10px;">
+        <input type="checkbox" id="email-optin" style="width:16px;height:16px;">
+        <label for="email-optin" style="font-size:13px;color:var(--ink-soft);">Email me about new packs &amp; restocks</label>
+      </div>
+    </div>
+
+    <div>
+      <div class="display" style="font-size:17px;font-weight:700;margin-bottom:14px;">2. Shipping Address</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+        <input class="field" placeholder="First name" />
+        <input class="field" placeholder="Last name" />
+      </div>
+      <input class="field" placeholder="Organization / School (optional)" style="margin-bottom:10px;"/>
+      <input class="field" placeholder="Address" style="margin-bottom:10px;"/>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+        <input class="field" placeholder="City" />
+        <input class="field" placeholder="State" />
+        <input class="field" placeholder="ZIP" />
+      </div>
+    </div>
+
+    <div>
+      <div class="display" style="font-size:17px;font-weight:700;margin-bottom:14px;">3. Shipping Method</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="pay-option selected" data-ship="8.00" onclick="selectShip(this)">
+          <div style="display:flex;align-items:center;gap:10px;"><div style="width:16px;height:16px;border-radius:999px;border:5px solid var(--coral);"></div><span style="font-weight:600;font-size:14px;">USPS Ground Advantage — 3–5 business days</span></div>
+          <span style="font-weight:700;font-size:14px;">$8.00</span>
+        </div>
+        <div class="pay-option" data-ship="19.50" onclick="selectShip(this)">
+          <div style="display:flex;align-items:center;gap:10px;"><div style="width:16px;height:16px;border-radius:999px;border:1.5px solid var(--line);"></div><span style="font-weight:600;font-size:14px;">UPS 2-Day</span></div>
+          <span style="font-weight:700;font-size:14px;">$19.50</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="display" style="font-size:17px;font-weight:700;margin-bottom:14px;">4. Payment</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+        <button type="button" style="background:#000;color:#fff;border:none;border-radius:10px;padding:13px 0;font-weight:700;font-size:14px;cursor:pointer;">🍎 Pay</button>
+        <button type="button" style="background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:13px 0;font-weight:700;font-size:14px;cursor:pointer;">G Pay</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <div style="flex:1;height:1px;background:var(--line);"></div><span style="font-size:12px;color:var(--ink-soft);">or pay by card</span><div style="flex:1;height:1px;background:var(--line);"></div>
+      </div>
+      <input class="field" placeholder="Card number" style="margin-bottom:10px;"/>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <input class="field" placeholder="MM / YY" />
+        <input class="field" placeholder="CVC" />
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:12px;">
+        <svg width="30" height="20" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="3" fill="var(--coral)"/></svg>
+        <span style="font-size:12px;color:var(--ink-soft);">Payments processed securely by Stripe</span>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-primary" id="place-order-btn" style="padding:18px 0;font-size:16.5px;" onclick="placeOrder()"><span>Pay <span id="pay-amount">$0.00</span> &amp; Place Order</span></button>
+    <div style="font-size:12px;color:var(--ink-soft);text-align:center;">Demo storefront — no live payment processor is connected. This button does not charge a card.</div>
+  </div>
+
+  <div class="card" id="checkout-summary" style="padding:26px;position:sticky;top:20px;">
+    <div class="display" style="font-size:17px;font-weight:700;margin-bottom:18px;">Order Summary</div>
+    <div id="checkout-items"></div>
+    <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;color:var(--ink-soft);"><span>Subtotal</span><span id="ck-subtotal" style="color:var(--ink);font-weight:600;">$0.00</span></div>
+      <div style="display:flex;justify-content:space-between;color:var(--ink-soft);"><span>Shipping</span><span id="ck-shipping" style="color:var(--ink);font-weight:600;">$8.00</span></div>
+      <div style="display:flex;justify-content:space-between;color:var(--ink-soft);"><span>Tax</span><span style="color:var(--ink);font-weight:600;">$0.00</span></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;padding-top:14px;border-top:1px solid var(--line);">
+      <span class="display" style="font-size:16px;font-weight:700;">Total</span>
+      <span class="display" id="ck-total" style="font-size:21px;font-weight:700;color:var(--coral-dark);">$0.00</span>
+    </div>
+    <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-soft);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 12L9 18L21 6" stroke="var(--sage)" stroke-width="2.5" stroke-linecap="round"/></svg>30-day return policy</div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-soft);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 12L9 18L21 6" stroke="var(--sage)" stroke-width="2.5" stroke-linecap="round"/></svg>Ships within 1 business day</div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div><div class="display" style="font-size:20px;font-weight:700;color:#fff;margin-bottom:10px;">WholesaleSquishy</div><div style="font-size:14px;color:#B7ACA1;line-height:1.6;max-width:280px;">Bulk squishy toys for classrooms, parties, and gift shops — shipped from the US.</div></div>
+    <div><h4>Shop</h4><a href="product.html">Dumplings &amp; Buns</a><a href="product.html">Character &amp; Animal</a><a href="product.html">Sensory Cubes</a><a href="product.html">Fruit &amp; Novelty</a></div>
+    <div><h4>Company</h4><a href="about.html">About Us</a><a href="contact.html">Contact</a><a href="faq.html">FAQ</a><a href="cart.html">Wholesale &amp; RFQ</a></div>
+    <div><h4>Policies</h4><a href="shipping.html">Shipping Policy</a><a href="returns.html">Return Policy</a><a href="refunds.html">Refund Policy</a><a href="terms.html">Terms &amp; Conditions</a><a href="privacy.html">Privacy Policy</a></div>
+  </div>
+  <div class="footer-bottom">© 2026 Wholesale Squishy. All rights reserved. · 12508 Center St, Suite 5, South Gate, CA 90280</div>
+</footer>
+
+<script src="js/cart.js"></script>
+<script>
+let shipCost = 8.00;
+
+function selectShip(el) {
+  document.querySelectorAll('.pay-option').forEach(o => {
+    o.classList.remove('selected');
+    o.querySelector('div div').style.border = '1.5px solid var(--line)';
+  });
+  el.classList.add('selected');
+  el.querySelector('div div').style.border = '5px solid var(--coral)';
+  shipCost = parseFloat(el.dataset.ship);
+  renderCheckoutSummary();
+}
+
+function renderCheckoutSummary() {
+  const cart = getCart();
+  if (cart.length === 0) {
+    document.getElementById('checkout-grid').style.display = 'none';
+    document.getElementById('empty-checkout').style.display = 'block';
+    return;
+  }
+  document.getElementById('checkout-grid').style.display = 'grid';
+  document.getElementById('empty-checkout').style.display = 'none';
+
+  const itemsEl = document.getElementById('checkout-items');
+  itemsEl.innerHTML = cart.map(item => `
+    <div class="summary-line">
+      <div style="width:52px;height:52px;background:var(--cream-deep);border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;"><img src="${item.image}" alt="" style="width:30px;"></div>
+      <div style="flex:1;"><div style="font-size:13.5px;font-weight:700;">${item.title}</div><div style="font-size:12px;color:var(--ink-soft);">Qty ${item.qty}</div></div>
+      <div style="font-weight:700;font-size:14px;">$${(item.qty * item.unitPrice).toFixed(2)}</div>
+    </div>`).join('');
+
+  const { subtotal } = cartTotals();
+  const total = subtotal + shipCost;
+  document.getElementById('ck-subtotal').textContent = `$${subtotal.toFixed(2)}`;
+  document.getElementById('ck-shipping').textContent = `$${shipCost.toFixed(2)}`;
+  document.getElementById('ck-total').textContent = `$${total.toFixed(2)}`;
+  document.getElementById('pay-amount').textContent = `$${total.toFixed(2)}`;
+}
+
+function placeOrder() {
+  showToast('Demo checkout — no payment processor connected yet.');
+}
+
+document.addEventListener('DOMContentLoaded', renderCheckoutSummary);
+</script>
+</body>
+</html>
