@@ -81,10 +81,7 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif;}
 #toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:14px 24px;border-radius:999px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .25s ease, transform .25s ease;z-index:200;}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-/* generic multi-column section grids: stack to one column on phones */
-.rg{grid-template-columns:1fr !important;}
-
-/* horizontally-scrollable pricing tables instead of crushing 6 columns */
+/* horizontally-scrollable pricing tables instead of crushing 6 columns on phones */
 .pricing-table-wrap{overflow-x:visible;}
 .pricing-row{min-width:0;}
 
@@ -92,15 +89,27 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif;}
   .nav{padding:14px 18px;}
   .nav-links{display:none;}
   .nav-brand span{font-size:17px;}
+  .nav-brand img{width:28px;height:28px;}
   .nav-actions{gap:10px;}
   .nav-actions .icon-search{display:none;}
   .nav-actions .btn{padding:9px 14px !important;font-size:12.5px !important;}
 
-  .rg{gap:28px !important;}
+  /* multi-column section grids: two columns on tablets, one on phones (see below) */
+  .rg{grid-template-columns:repeat(2,1fr) !important;gap:24px !important;}
   .rg-tight{gap:16px !important;}
+
+  .footer{padding:44px 24px 24px 24px;}
+  .footer-grid{grid-template-columns:repeat(2,1fr) !important;gap:28px !important;}
 
   .pricing-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
   .pricing-row{min-width:640px;}
 
-  h1.display{font-size:34px !important;}
+  h1.display{font-size:32px !important;}
+  .card-img{height:170px;padding:20px;}
+}
+
+@media (max-width:600px){
+  .rg{grid-template-columns:1fr !important;}
+  .footer-grid{grid-template-columns:1fr !important;}
+  .nav-brand span{font-size:15px;}
 }
