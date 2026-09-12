@@ -77,9 +77,24 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif;}
 .footer a{color:#B7ACA1;font-size:14px;display:block;margin-bottom:10px;}
 .footer-bottom{max-width:1440px;margin:0 auto;padding-top:22px;font-size:13px;color:#8A8078;}
 
-/* toast */
+/* toast (legacy plain pill, kept for any non-cart messages) */
 #toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:14px 24px;border-radius:999px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .25s ease, transform .25s ease;z-index:200;}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* add-to-cart popup: shows what was added + a View Cart action */
+#cart-popup{position:fixed;left:16px;right:16px;bottom:16px;max-width:380px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 40px rgba(43,35,32,0.18);opacity:0;transform:translateY(24px);pointer-events:none;transition:opacity .25s ease, transform .25s ease;z-index:300;overflow:hidden;}
+#cart-popup.show{opacity:1;transform:translateY(0);pointer-events:auto;}
+.cart-popup-inner{display:flex;align-items:center;gap:12px;padding:14px 14px 12px 14px;}
+.cart-popup-img{width:48px;height:48px;border-radius:10px;object-fit:cover;flex-shrink:0;background:var(--cream-deep);}
+.cart-popup-info{flex:1;min-width:0;}
+.cart-popup-added{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:#3D6B40;text-transform:uppercase;letter-spacing:0.4px;}
+.cart-popup-title{font-size:13.5px;font-weight:700;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cart-popup-price{font-size:12.5px;color:var(--ink-soft);margin-top:2px;}
+.cart-popup-close{background:transparent;border:none;font-size:18px;line-height:1;color:var(--ink-soft);cursor:pointer;padding:4px;flex-shrink:0;align-self:flex-start;}
+.cart-popup-close:hover{color:var(--ink);}
+.cart-popup-view{display:block;text-align:center;background:var(--coral);color:#fff;font-weight:700;font-size:13.5px;padding:12px;border-top:1px solid rgba(0,0,0,0.06);}
+.cart-popup-view:hover{background:var(--coral-dark);color:#fff;}
+@media (min-width:640px){#cart-popup{left:auto;right:24px;bottom:24px;margin:0;}}
 
 /* horizontally-scrollable pricing tables instead of crushing 6 columns on phones */
 .pricing-table-wrap{overflow-x:visible;}
@@ -94,12 +109,14 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif;}
   .nav-actions .icon-search{display:none;}
   .nav-actions .btn{padding:9px 14px !important;font-size:12.5px !important;}
 
-  /* multi-column section grids: two columns on tablets, one on phones (see below) */
-  .rg{grid-template-columns:repeat(2,1fr) !important;gap:24px !important;}
+  /* multi-column section grids: two columns on tablets, one on phones (see below).
+     minmax(0,1fr) — not bare 1fr — so a track can shrink below its content's
+     natural width instead of forcing the whole grid (and page) to overflow. */
+  .rg{grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:24px !important;}
   .rg-tight{gap:16px !important;}
 
   .footer{padding:44px 24px 24px 24px;}
-  .footer-grid{grid-template-columns:repeat(2,1fr) !important;gap:28px !important;}
+  .footer-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:28px !important;}
 
   .pricing-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
   .pricing-row{min-width:640px;}
@@ -109,7 +126,7 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif;}
 }
 
 @media (max-width:600px){
-  .rg{grid-template-columns:1fr !important;}
-  .footer-grid{grid-template-columns:1fr !important;}
+  .rg{grid-template-columns:minmax(0,1fr) !important;}
+  .footer-grid{grid-template-columns:minmax(0,1fr) !important;}
   .nav-brand span{font-size:15px;}
 }

@@ -25,7 +25,7 @@ function addToCart(item) {
     cart.push(item);
   }
   saveCart(cart);
-  showToast(`Added ${item.qty} × ${item.title} to cart`);
+  showCartPopup(item);
 }
 
 function removeFromCart(sku) {
@@ -69,6 +69,42 @@ function showToast(msg) {
   toast.classList.add('show');
   clearTimeout(window._toastTimer);
   window._toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+// Professional "added to cart" popup: thumbnail, qty/price, and a View Cart
+// action, instead of a plain text pill. Shown on every add-to-cart click.
+function showCartPopup(item) {
+  let popup = document.getElementById('cart-popup');
+  if (!popup) {
+    popup = document.createElement('div');
+    popup.id = 'cart-popup';
+    document.body.appendChild(popup);
+  }
+  const { pieces } = cartTotals();
+  const lineTotal = (item.qty * item.unitPrice).toFixed(2);
+  popup.innerHTML = `
+    <div class="cart-popup-inner">
+      <img class="cart-popup-img" src="${item.image || ''}" alt="">
+      <div class="cart-popup-info">
+        <div class="cart-popup-added">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M3 12L9 18L21 6" stroke="#3D6B40" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Added to cart
+        </div>
+        <div class="cart-popup-title">${item.qty} × ${item.title}</div>
+        <div class="cart-popup-price">$${lineTotal}</div>
+      </div>
+      <button type="button" class="cart-popup-close" aria-label="Dismiss">&times;</button>
+    </div>
+    <a href="cart.html" class="cart-popup-view">View Cart · ${pieces} pcs →</a>
+  `;
+  popup.querySelector('.cart-popup-close').addEventListener('click', () => {
+    popup.classList.remove('show');
+    clearTimeout(window._cartPopupTimer);
+  });
+
+  requestAnimationFrame(() => popup.classList.add('show'));
+  clearTimeout(window._cartPopupTimer);
+  window._cartPopupTimer = setTimeout(() => popup.classList.remove('show'), 4500);
 }
 
 // quantity stepper wiring: any element with data-qty-for="<sku>" wraps a
