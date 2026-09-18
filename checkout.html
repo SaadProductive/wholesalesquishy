@@ -29,6 +29,10 @@
   </div>
 </nav>
 
+<main>
+
+<h1 class="display" style="max-width:1160px;margin:clamp(24px,5vw,36px) auto 0 auto;padding:0 clamp(20px,6vw,64px);font-size:24px;font-weight:700;">Checkout</h1>
+
 <div id="empty-checkout" class="wrap" style="display:none;text-align:center;padding:clamp(60px,10vw,100px) clamp(20px,6vw,64px);">
   <div class="display" style="font-size:22px;font-weight:700;margin-bottom:10px;">Nothing to check out yet</div>
   <div style="font-size:15px;color:var(--ink-soft);margin-bottom:24px;">Your cart is empty. Add a case first.</div>
@@ -40,7 +44,7 @@
   <div style="display:flex;flex-direction:column;gap:28px;">
 
     <div>
-      <div class="display" style="font-size:17px;font-weight:700;margin-bottom:14px;">1. Contact</div>
+      <h2 class="display" style="font-size:17px;font-weight:700;margin-bottom:14px;">1. Contact</h2>
       <input class="field" placeholder="Email address" />
       <div style="display:flex;align-items:center;gap:8px;margin-top:10px;">
         <input type="checkbox" id="email-optin" style="width:16px;height:16px;">
@@ -49,7 +53,7 @@
     </div>
 
     <div>
-      <div class="display" style="font-size:17px;font-weight:700;margin-bottom:14px;">2. Shipping Address</div>
+      <h2 class="display" style="font-size:17px;font-weight:700;margin-bottom:14px;">2. Shipping Address</h2>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
         <input class="field" placeholder="First name" />
         <input class="field" placeholder="Last name" />
@@ -64,7 +68,7 @@
     </div>
 
     <div>
-      <div class="display" style="font-size:17px;font-weight:700;margin-bottom:14px;">3. Shipping Method</div>
+      <h2 class="display" style="font-size:17px;font-weight:700;margin-bottom:14px;">3. Shipping Method</h2>
       <div style="display:flex;flex-direction:column;gap:10px;">
         <div class="pay-option selected" data-ship="8.00" data-ship-label="USPS Ground Advantage" onclick="selectShip(this)">
           <div style="display:flex;align-items:center;gap:10px;"><div style="width:16px;height:16px;border-radius:999px;border:5px solid var(--coral);"></div><span style="font-weight:600;font-size:14px;">USPS Ground Advantage (3–5 business days)</span></div>
@@ -78,7 +82,7 @@
     </div>
 
     <div>
-      <div class="display" style="font-size:17px;font-weight:700;margin-bottom:14px;">4. Payment</div>
+      <h2 class="display" style="font-size:17px;font-weight:700;margin-bottom:14px;">4. Payment</h2>
       <div style="display:flex;align-items:center;gap:8px;">
               <svg width="30" height="20" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="3" fill="var(--coral)"/></svg>
               <span style="font-size:13px;color:var(--ink-soft);">You'll enter your card on Stripe's secure page next. We never see or store your card details.</span>
@@ -90,7 +94,7 @@
   </div>
 
   <div class="card" id="checkout-summary" style="padding:26px;position:sticky;top:20px;">
-    <div class="display" style="font-size:17px;font-weight:700;margin-bottom:18px;">Order Summary</div>
+    <h2 class="display" style="font-size:17px;font-weight:700;margin-bottom:18px;">Order Summary</h2>
     <div id="checkout-items"></div>
     <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;margin-bottom:16px;">
       <div style="display:flex;justify-content:space-between;color:var(--ink-soft);"><span>Subtotal</span><span id="ck-subtotal" style="color:var(--ink);font-weight:600;">$0.00</span></div>
@@ -108,12 +112,14 @@
   </div>
 </div>
 
+</main>
+
 <footer class="footer">
   <div class="footer-grid">
     <div><div class="display" style="font-size:20px;font-weight:700;color:#fff;margin-bottom:10px;">Wholesale Squishy</div><div style="font-size:14px;color:#B7ACA1;line-height:1.6;max-width:280px;">Wholesale squishy toys for retailers, vending operators, and gift shops. Shipped from the US.</div></div>
-    <div><h4>Shop</h4><a href="product.html">Dumplings &amp; Buns</a><a href="product.html">Character &amp; Animal</a><a href="product.html">Sensory Cubes</a><a href="product.html">Fruit &amp; Novelty</a></div>
-    <div><h4>Company</h4><a href="about.html">About Us</a><a href="contact.html">Contact</a><a href="faq.html">FAQ</a><a href="cart.html">Wholesale &amp; RFQ</a></div>
-    <div><h4>Policies</h4><a href="shipping.html">Shipping Policy</a><a href="returns.html">Return Policy</a><a href="refunds.html">Refund Policy</a><a href="terms.html">Terms &amp; Conditions</a><a href="privacy.html">Privacy Policy</a></div>
+    <div><h3>Shop</h3><a href="/#bestsellers">Dumplings &amp; Buns</a><a href="/#bestsellers">Fruit &amp; Novelty</a></div>
+    <div><h3>Company</h3><a href="about.html">About Us</a><a href="contact.html">Contact</a><a href="faq.html">FAQ</a><a href="cart.html">Wholesale &amp; RFQ</a></div>
+    <div><h3>Policies</h3><a href="shipping.html">Shipping Policy</a><a href="returns.html">Return Policy</a><a href="refunds.html">Refund Policy</a><a href="terms.html">Terms &amp; Conditions</a><a href="privacy.html">Privacy Policy</a></div>
   </div>
   <div class="footer-bottom">© 2026 Wholesale Squishy. All rights reserved. · 12508 Center St, Suite 5, South Gate, CA 90280</div>
 </footer>
@@ -148,7 +154,7 @@ function renderCheckoutSummary() {
   const itemsEl = document.getElementById('checkout-items');
   itemsEl.innerHTML = cart.map(item => `
     <div class="summary-line">
-      <div style="width:52px;height:52px;background:var(--cream-deep);border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;"><img src="${item.image}" alt="" style="width:30px;"></div>
+      <div style="width:52px;height:52px;background:var(--cream-deep);border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;"><img src="${item.image}" alt="${item.title}" style="width:30px;"></div>
       <div style="flex:1;"><div style="font-size:13.5px;font-weight:700;">${item.title}</div><div style="font-size:12px;color:var(--ink-soft);">Qty ${item.qty}</div></div>
       <div style="font-weight:700;font-size:14px;">$${(item.qty * item.unitPrice).toFixed(2)}</div>
     </div>`).join('');
@@ -180,12 +186,15 @@ async function placeOrder() {
                             shipping: { label: shipLabel, amount: shipCost }
                   })
           });
-          const data = await res.json();
-          if (!res.ok || !data.url) throw new Error(data.error || 'Checkout failed.');
+          let data = null;
+          try { data = await res.json(); } catch (parseErr) { /* non-JSON response, e.g. a 404/500 HTML page */ }
+          if (!res.ok || !data || !data.url) {
+                  throw new Error((data && data.error) || 'We could not start checkout. Please try again, or email support@wholesalesquishy.com and we will complete your order manually.');
+          }
           window.location = data.url;
     } catch (err) {
           const { subtotal } = cartTotals();
-          errEl.textContent = err.message || 'Something went wrong. Try again.';
+          errEl.textContent = (err && err.message) || 'Something went wrong. Try again.';
           errEl.style.display = 'block';
           btn.disabled = false;
           label.innerHTML = `Continue to Payment: <span id="pay-amount">$${(subtotal + shipCost).toFixed(2)}</span>`;

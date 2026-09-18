@@ -31,8 +31,8 @@
   <a href="/" class="nav-brand"><img src="images/logo-mark.svg" alt="Wholesale Squishy logo"><span>Wholesale Squishy</span></a>
   <div class="nav-links">
     <a href="/#bestsellers">Shop All</a>
-    <a href="/#segments">For Teachers</a>
-    <a href="/#segments">For Parties</a>
+    <a href="/#segments">For Retailers</a>
+    <a href="/#segments">For Vending</a>
     <a href="/#pricing">Wholesale</a>
   </div>
   <div class="nav-actions">
@@ -42,6 +42,8 @@
     </div>
   </div>
 </nav>
+
+<main>
 
 <div class="wrap" style="max-width:1100px;padding:clamp(32px,6vw,56px) clamp(20px,6vw,64px);">
   <h1 class="display" style="font-size:32px;font-weight:700;margin:0 0 8px 0;">Your Cart</h1>
@@ -56,12 +58,12 @@
         <div style="font-weight:700;font-size:14.5px;margin-bottom:12px;">Add to your order</div>
         <div class="addon-grid" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;">
           <div class="addon-card">
-            <div style="width:44px;height:44px;background:var(--coral-tint);border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="images/fr-34-thumb.webp" alt="" style="width:44px;height:44px;object-fit:cover;"></div>
+            <div style="width:44px;height:44px;background:var(--coral-tint);border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="images/fr-34-thumb.webp" alt="Strawberry Pink Butter Squishy" style="width:44px;height:44px;object-fit:cover;"></div>
             <div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:700;overflow-wrap:break-word;">Strawberry Pink Butter Squishy, 12pc</div><div style="font-size:12px;color:var(--ink-soft);">$2.31/pc</div></div>
             <button class="addon-plus" onclick="addToCart({sku:'FR-34',title:'Strawberry Pink Butter Squishy, 12pc case',category:'Fruit & Novelty',unitPrice:2.31,caseSize:12,qty:12,image:'images/fr-34.webp'})">+</button>
           </div>
           <div class="addon-card">
-            <div style="width:44px;height:44px;background:var(--cream-deep);border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="images/wy-100-thumb.webp" alt="" style="width:44px;height:44px;object-fit:cover;"></div>
+            <div style="width:44px;height:44px;background:var(--cream-deep);border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="images/wy-100-thumb.webp" alt="Dumpling Squishy, Smiley Face" style="width:44px;height:44px;object-fit:cover;"></div>
             <div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:700;overflow-wrap:break-word;">Dumpling Medium Squishy, Smiley Face, 12pc</div><div style="font-size:12px;color:var(--ink-soft);">$3.08/pc</div></div>
             <button class="addon-plus" onclick="addToCart({sku:'WY-100',title:'Dumpling Medium Squishy, Smiley Face, 12pc case',category:'Dumplings & Buns',unitPrice:3.08,caseSize:12,qty:12,image:'images/wy-100.webp'})">+</button>
           </div>
@@ -70,7 +72,7 @@
     </div>
 
     <div class="card" style="padding:28px;position:sticky;top:20px;">
-      <div class="display" style="font-size:19px;font-weight:700;margin-bottom:18px;">Order Summary</div>
+      <h2 class="display" style="font-size:19px;font-weight:700;margin-bottom:18px;">Order Summary</h2>
       <div style="display:flex;flex-direction:column;gap:12px;font-size:14.5px;">
         <div style="display:flex;justify-content:space-between;color:var(--ink-soft);"><span id="cart-pieces-label">Subtotal (0 pcs)</span><span id="cart-subtotal" style="color:var(--ink);font-weight:600;">$0.00</span></div>
         <div style="display:flex;justify-content:space-between;color:var(--ink-soft);"><span>Estimated shipping</span><span style="color:var(--ink);font-weight:600;">Calculated at checkout</span></div>
@@ -99,12 +101,14 @@
   </div>
 </div>
 
+</main>
+
 <footer class="footer">
   <div class="footer-grid">
     <div><div class="display" style="font-size:20px;font-weight:700;color:#fff;margin-bottom:10px;">Wholesale Squishy</div><div style="font-size:14px;color:#B7ACA1;line-height:1.6;max-width:280px;">Wholesale squishy toys for retailers, vending operators, and gift shops. Shipped from the US.</div></div>
-    <div><h4>Shop</h4><a href="product.html">Dumplings &amp; Buns</a><a href="product.html">Character &amp; Animal</a><a href="product.html">Sensory Cubes</a><a href="product.html">Fruit &amp; Novelty</a></div>
-    <div><h4>Company</h4><a href="about.html">About Us</a><a href="contact.html">Contact</a><a href="faq.html">FAQ</a><a href="cart.html">Wholesale &amp; RFQ</a></div>
-    <div><h4>Policies</h4><a href="shipping.html">Shipping Policy</a><a href="returns.html">Return Policy</a><a href="refunds.html">Refund Policy</a><a href="terms.html">Terms &amp; Conditions</a><a href="privacy.html">Privacy Policy</a></div>
+    <div><h3>Shop</h3><a href="/#bestsellers">Dumplings &amp; Buns</a><a href="/#bestsellers">Fruit &amp; Novelty</a></div>
+    <div><h3>Company</h3><a href="about.html">About Us</a><a href="contact.html">Contact</a><a href="faq.html">FAQ</a><a href="cart.html">Wholesale &amp; RFQ</a></div>
+    <div><h3>Policies</h3><a href="shipping.html">Shipping Policy</a><a href="returns.html">Return Policy</a><a href="refunds.html">Refund Policy</a><a href="terms.html">Terms &amp; Conditions</a><a href="privacy.html">Privacy Policy</a></div>
   </div>
   <div class="footer-bottom">© 2026 Wholesale Squishy. All rights reserved. · 12508 Center St, Suite 5, South Gate, CA 90280</div>
 </footer>

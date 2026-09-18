@@ -73,7 +73,7 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif;}
 /* footer */
 .footer{background:var(--ink);padding:56px 64px 30px 64px;}
 .footer-grid{max-width:1440px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;padding-bottom:40px;border-bottom:1px solid #453B34;}
-.footer h4{font-size:13px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:0.6px;margin:0 0 14px 0;}
+.footer h3{font-size:13px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:0.6px;margin:0 0 14px 0;}
 .footer a{color:#B7ACA1;font-size:14px;display:block;margin-bottom:10px;}
 .footer-bottom{max-width:1440px;margin:0 auto;padding-top:22px;font-size:13px;color:#8A8078;}
 
@@ -92,8 +92,11 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif;}
 .cart-popup-price{font-size:12.5px;color:var(--ink-soft);margin-top:2px;}
 .cart-popup-close{background:transparent;border:none;font-size:18px;line-height:1;color:var(--ink-soft);cursor:pointer;padding:4px;flex-shrink:0;align-self:flex-start;}
 .cart-popup-close:hover{color:var(--ink);}
-.cart-popup-view{display:block;text-align:center;background:var(--coral);color:#fff;font-weight:700;font-size:13.5px;padding:12px;border-top:1px solid rgba(0,0,0,0.06);}
-.cart-popup-view:hover{background:var(--coral-dark);color:#fff;}
+.cart-popup-actions{display:flex;border-top:1px solid rgba(0,0,0,0.06);}
+.cart-popup-view{flex:1;text-align:center;background:var(--cream-deep);color:var(--ink);font-weight:700;font-size:13px;padding:12px 8px;}
+.cart-popup-view:hover{background:var(--line);}
+.cart-popup-checkout{flex:1;text-align:center;background:var(--coral);color:#fff;font-weight:700;font-size:13px;padding:12px 8px;}
+.cart-popup-checkout:hover{background:var(--coral-dark);color:#fff;}
 @media (min-width:640px){#cart-popup{left:auto;right:24px;bottom:24px;margin:0;}}
 
 /* horizontally-scrollable pricing tables instead of crushing 6 columns on phones */

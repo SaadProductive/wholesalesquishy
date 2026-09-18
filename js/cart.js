@@ -84,7 +84,7 @@ function showCartPopup(item) {
   const lineTotal = (item.qty * item.unitPrice).toFixed(2);
   popup.innerHTML = `
     <div class="cart-popup-inner">
-      <img class="cart-popup-img" src="${item.image || ''}" alt="">
+      <img class="cart-popup-img" src="${item.image || ''}" alt="${item.title || ''}">
       <div class="cart-popup-info">
         <div class="cart-popup-added">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M3 12L9 18L21 6" stroke="#3D6B40" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -95,7 +95,10 @@ function showCartPopup(item) {
       </div>
       <button type="button" class="cart-popup-close" aria-label="Dismiss">&times;</button>
     </div>
-    <a href="cart.html" class="cart-popup-view">View Cart · ${pieces} pcs →</a>
+    <div class="cart-popup-actions">
+      <a href="cart.html" class="cart-popup-view">View Cart · ${pieces} pcs</a>
+      <a href="checkout.html" class="cart-popup-checkout">Checkout &rarr;</a>
+    </div>
   `;
   popup.querySelector('.cart-popup-close').addEventListener('click', () => {
     popup.classList.remove('show');
