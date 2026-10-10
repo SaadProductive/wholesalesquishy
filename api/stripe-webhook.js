@@ -191,6 +191,10 @@ async function logOrder(session, stripe) {
   });
   if (lines.length === 0) lines.push({ sku: '', title: '(no items found)', image: '', pieces: '', cases: '', unit: '', total: '' });
 
+  return finish(order, lines, token);
+}
+
+async function finish(order, lines, token) {
   const out = {};
   for (const k of Object.keys(SHEETS)) out[k] = await appendTo(SHEETS[k], order, lines, token);
   // email only for a NEW order (not a Stripe redelivery), and never let an email problem make Stripe retry the sheet logging
@@ -198,6 +202,33 @@ async function logOrder(session, stripe) {
     try { out.email = await emailConfirmation(order, lines); } catch (e) { console.error('Confirmation email failed:', e && e.message); out.email = 'failed'; }
   }
   return out;
+}
+
+// Invoice orders (created from an RFQ): when a Stripe invoice is paid, log it exactly like a checkout order.
+async function logInvoice(inv, stripe) {
+  const token = await googleAccessToken();
+  const usd = (c) => (Number(c || 0) / 100).toFixed(2);
+  const sh = inv.customer_shipping || {}, a = sh.address || inv.customer_address || {};
+  const all = (inv.lines && inv.lines.data) || [];
+  const shipLine = all.find((l) => l.metadata && l.metadata.type === 'shipping');
+  const lines = all.filter((l) => !(l.metadata && l.metadata.type === 'shipping')).map((li) => {
+    const sku = (li.metadata && li.metadata.sku) || '';
+    const cat = WSQ.CATALOG[sku] || {};
+    const pieces = li.quantity;
+    return { sku, title: (cat.title || li.description || '').replace(/, \d+pc case$/, ''),
+      image: sku ? `=IMAGE("${SITE}/images/sheet/${sku.toLowerCase()}.jpg",1)` : '',
+      pieces, cases: cat.caseSize ? Math.ceil(pieces / cat.caseSize) : '', unit: usd(li.amount / Math.max(1, li.quantity)), total: usd(li.amount) };
+  });
+  const order = {
+    date: new Date(inv.created * 1000).toISOString().replace('T', ' ').slice(0, 19),
+    shortId: inv.id.slice(-8).toUpperCase(),
+    name: inv.customer_name || '', email: inv.customer_email || '', phone: inv.customer_phone || '',
+    shipName: sh.name || inv.customer_name || '', a1: a.line1 || '', a2: a.line2 || '', city: a.city || '', state: a.state || '', zip: a.postal_code || '', country: a.country || '',
+    subtotal: usd(inv.subtotal - (shipLine ? shipLine.amount : 0)), shipping: usd(shipLine ? shipLine.amount : 0), orderTotal: usd(inv.amount_paid || inv.total),
+    method: 'invoice', payStatus: 'paid'
+  };
+  if (!lines.length) lines.push({ sku: '', title: '(invoice ' + inv.number + ')', image: '', pieces: '', cases: '', unit: '', total: usd(inv.total) });
+  return finish(order, lines, token);
 }
 
 module.exports = async (req, res) => {
@@ -224,6 +255,18 @@ module.exports = async (req, res) => {
       // non-2xx makes Stripe retry for up to 3 days, so a temporary Google error never loses an order
       console.error('Order log failed:', err && err.message);
       res.status(500).send('Order log failed');
+    }
+    return;
+  }
+  if (event.type === 'invoice.paid') {
+    try {
+      const inv = event.data.object;
+      if (!inv.metadata || inv.metadata.source !== 'rfq') { res.status(200).json({ received: true, ignored: 'non-rfq invoice' }); return; }
+      const result = await logInvoice(inv, stripe);
+      res.status(200).json({ received: true, result });
+    } catch (err) {
+      console.error('Invoice log failed:', err && err.message);
+      res.status(500).send('Invoice log failed');
     }
     return;
   }

@@ -17,5 +17,6 @@
 - [Shipping policy](https://wholesalesquishy.com/shipping.html)
 - [Return policy](https://wholesalesquishy.com/returns.html)
 - [Safety documents](https://wholesalesquishy.com/safety.html)
+- [Request a bulk quote / invoice](https://wholesalesquishy.com/rfq.html)
 - [Contact / bulk quote](https://wholesalesquishy.com/contact.html)
 - [Product feed](https://wholesalesquishy.com/google_merchant_feed.csv)

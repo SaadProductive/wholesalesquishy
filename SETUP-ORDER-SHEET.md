@@ -67,3 +67,19 @@ Nothing to do beyond the contact-form setup. If the variables are missing the em
 4. Test: put a fake order row in, set Status = Shipped, Carrier = UPS, Tracking # = anything. The buyer email (looked up in the Admin sheet) gets the message once. Use your own email in a test row first.
 Packer rule: fill Carrier and Tracking # first, then set Status to Shipped for ALL lines of that order. The script also copies Status and Tracking into the Admin sheet.
 The email is sent from the Google account that owns the Warehouse sheet (Gmail limit ~100/day for personal accounts, 1,500 for Workspace).
+
+---
+
+# Large orders: Request a Quote (RFQ) + Stripe invoice
+
+Flow: buyer fills **rfq.html** (cases per style, address, payment preference) -> you get an email with the full summary and two buttons ->
+**"Create & email Stripe invoice"** (one click: invoice created with volume pricing + shipping, emailed to the buyer, due in 14 days) or **"Create draft only"** (review/edit in Stripe first; use this for freight orders over $15,000). The buyer also gets a confirmation email with the estimate.
+When the invoice is paid, the order lands in your Orders + Warehouse sheets and the buyer gets the order confirmation, exactly like a normal checkout order.
+
+One-time setup:
+1. Vercel env var `ADMIN_LINK_SECRET` = any long random string you make up (30+ characters). Never share it. (Without it the email has no invoice buttons; the quote still arrives.)
+2. Stripe webhook (Developers, Webhooks, your endpoint): add the event **`invoice.paid`** (in addition to `checkout.session.completed`).
+3. Pay by bank transfer: Stripe Dashboard, Settings, Payments, Payment methods: enable **ACH Direct Debit**. Without it, invoices accept cards only.
+4. Uses the same Gmail variables as the contact form (`GMAIL_USER`, `GMAIL_APP_PASSWORD`, `CONTACT_TO`) and `STRIPE_SECRET_KEY`.
+Test in Stripe test mode first with a small quote to your own email.
+Invoice links in the email expire after 14 days; clicking twice never creates two invoices. Forwarding the email forwards the buttons, so keep it private.

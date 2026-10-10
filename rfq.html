@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Request a Bulk Quote | Wholesale Squishy</title>
+<meta name="description" content="Request a quote for large wholesale squishy orders. Volume pricing, invoice by card or bank transfer, ships from South Gate, CA.">
+<meta property="og:site_name" content="Wholesale Squishy">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Request a Bulk Quote | Wholesale Squishy">
+<meta property="og:description" content="Request a quote for large wholesale squishy orders. Volume pricing, invoice by card or bank transfer, ships from South Gate, CA.">
+<meta property="og:url" content="https://wholesalesquishy.com/rfq.html">
+<meta property="og:image" content="https://wholesalesquishy.com/images/og-default.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Request a Bulk Quote | Wholesale Squishy">
+<meta name="twitter:description" content="Request a quote for large wholesale squishy orders. Volume pricing, invoice by card or bank transfer, ships from South Gate, CA.">
+<meta name="twitter:image" content="https://wholesalesquishy.com/images/og-default.jpg">
+<link rel="canonical" href="https://wholesalesquishy.com/rfq.html">
+<link rel="icon" href="images/logo-mark.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .policy{max-width:760px;margin:0 auto;padding:56px 64px 100px 64px;}
+  .policy h1{font-size:34px;margin:0 0 6px 0;}
+  .policy .updated{font-size:13px;color:var(--ink-soft);margin-bottom:40px;}
+  .policy h2{font-size:20px;margin:36px 0 12px 0;}
+  .policy p, .policy li{font-size:15px;line-height:1.7;color:var(--ink-soft);}
+  .policy a{font-weight:600;}
+  .field{border:1.5px solid var(--line);border-radius:10px;padding:13px 14px;font-size:14px;font-family:'Plus Jakarta Sans';width:100%;background:#fff;margin-bottom:12px;}
+</style>
+<script src="js/analytics.js"></script>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M5HRM57B" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<div class="ship-bar"><b>Orders processed immediately</b> &middot; Delivery within 5 working days <a href="shipping.html">details</a></div>
+<nav class="nav">
+  <a href="/" class="nav-brand"><img src="images/logo-mark.svg" alt="Wholesale Squishy logo"><span>Wholesale Squishy</span></a>
+  <div class="nav-links">
+    <a href="/#bestsellers">Shop All</a>
+    <a href="/#segments">For Retailers</a>
+    <a href="/#segments">For Vending</a>
+    <a href="/#pricing">Wholesale</a>
+  </div>
+  <div class="nav-actions">
+    <svg class="icon-search" width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#2B2320" stroke-width="2"/><path d="M21 21L16.5 16.5" stroke="#2B2320" stroke-width="2" stroke-linecap="round"/></svg>
+    <a href="cart.html" class="icon-btn" aria-label="Cart">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 8H20L19 20H5L4 8Z" stroke="#2B2320" stroke-width="2" stroke-linejoin="round"/><path d="M9 8V6C9 4.3 10.3 3 12 3C13.7 3 15 4.3 15 6V8" stroke="#2B2320" stroke-width="2"/></svg>
+      <span class="cart-count" style="display:none;">0</span>
+    </a>
+    <button class="btn btn-primary" style="padding:12px 24px;font-size:14.5px;" onclick="location.href='cart.html'">Get Bulk Pricing</button>
+  </div>
+</nav>
+
+<main>
+
+<div class="policy" style="max-width:860px;">
+  <h1 class="display">Request a Bulk Quote</h1>
+  <div class="updated">For large orders. We reply within 1 business day with your quote and an invoice you can pay by card or bank transfer.</div>
+
+  <form id="rfq-form" onsubmit="return submitRfq(event);">
+    <h2>1. What do you need?</h2>
+    <p style="font-size:13px;">Enter the number of <b>cases</b> per style. Prices below use volume pricing across your whole order.</p>
+    <div id="rfq-items"></div>
+    <div id="rfq-est" style="margin:12px 0 0 0;padding:14px 16px;background:var(--cream-deep);border-radius:12px;font-size:14px;line-height:1.6;color:var(--ink);">Add cases above to see an estimate.</div>
+
+    <h2>2. Your business</h2>
+    <input class="field" id="q-business" placeholder="Business name (optional)" />
+    <input class="field" id="q-name" placeholder="Your name" required />
+    <input class="field" id="q-email" type="email" placeholder="Email address" required />
+    <input class="field" id="q-phone" placeholder="Phone (optional)" />
+
+    <h2>3. Ship to</h2>
+    <input class="field" id="q-a1" placeholder="Street address" required />
+    <input class="field" id="q-a2" placeholder="Apt / suite (optional)" />
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;">
+      <input class="field" id="q-city" placeholder="City" required />
+      <input class="field" id="q-state" placeholder="State" required />
+      <input class="field" id="q-zip" placeholder="ZIP" required />
+    </div>
+
+    <h2>4. Payment &amp; notes</h2>
+    <select class="field" id="q-payment">
+      <option>Pay invoice by card</option>
+      <option>Pay invoice by bank transfer (ACH)</option>
+      <option>Request payment terms (net 30)</option>
+    </select>
+    <label style="display:flex;gap:8px;align-items:center;font-size:14px;color:var(--ink-soft);margin:0 0 12px 0;"><input type="checkbox" id="q-resale"> I have a resale certificate</label>
+    <textarea class="field" id="q-notes" rows="4" placeholder="Anything else? Deadline, mixed styles, questions about safety documents"></textarea>
+    <input type="text" id="q-website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;" aria-hidden="true" />
+    <button type="submit" class="btn btn-primary" style="padding:14px 28px;">Send quote request</button>
+    <div id="rfq-msg" style="font-size:14px;margin-top:12px;"></div>
+  </form>
+</div>
+
+<script>
+const CASES_FROM_CART = {};
+function renderRfqItems() {
+  const box = document.getElementById('rfq-items');
+  try { (JSON.parse(localStorage.getItem('wsq_cart') || '[]')).forEach(i => { CASES_FROM_CART[i.sku] = Math.ceil(i.qty / i.caseSize); }); } catch (e) {}
+  box.innerHTML = Object.keys(WSQ.CATALOG).map(sku => {
+    const c = WSQ.CATALOG[sku], out = c.inStock === false;
+    return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);">
+      <div style="flex:1;font-size:14px;color:var(--ink);"><b>${c.title.replace(/, \d+pc case$/, '')}</b><br><span style="font-size:12.5px;color:var(--ink-soft);">${sku} &middot; ${c.caseSize} pcs/case &middot; from ${WSQ.money(c.price)}/pc${out ? ' &middot; <b style="color:var(--coral-dark);">out of stock</b>' : ''}</span></div>
+      <input type="number" min="0" step="1" value="${out ? 0 : (CASES_FROM_CART[sku] || '')}" placeholder="0" ${out ? 'disabled' : ''} data-sku="${sku}" data-case="${c.caseSize}" style="width:84px;border:1.5px solid var(--line);border-radius:10px;padding:10px;font-size:14px;" oninput="rfqEstimate()"> <span style="font-size:13px;color:var(--ink-soft);">cases</span></div>`;
+  }).join('');
+  rfqEstimate();
+}
+function rfqItems() {
+  return Array.from(document.querySelectorAll('#rfq-items input')).map(i => ({ sku: i.dataset.sku, qty: (parseInt(i.value, 10) || 0) * parseInt(i.dataset.case, 10) })).filter(x => x.qty > 0);
+}
+function rfqEstimate() {
+  const el = document.getElementById('rfq-est'), items = rfqItems();
+  if (!items.length) { el.textContent = 'Add cases above to see an estimate.'; return; }
+  let total = 0; items.forEach(i => { total += i.qty; });
+  const lines = items.map(i => ({ sku: i.sku, qty: i.qty, unitPrice: WSQ.tierPrice(WSQ.CATALOG[i.sku].price, total), caseSize: WSQ.CATALOG[i.sku].caseSize }));
+  const calc = WSQ.shippingFor(lines);
+  const ship = calc.mode === 'free' ? 'FREE' : calc.mode === 'quote' ? 'quoted separately (freight)' : WSQ.money(calc.amount);
+  const grand = calc.mode === 'quote' ? WSQ.money(calc.subtotal) + ' + freight' : WSQ.money(calc.subtotal + calc.amount);
+  el.innerHTML = `<b>${total} pieces</b> &middot; ${calc.boxes} case${calc.boxes === 1 ? '' : 's'}<br>Subtotal ${WSQ.money(calc.subtotal)} &middot; Shipping ${ship}<br><b>Estimated total: ${grand}</b>`;
+}
+async function submitRfq(e) {
+  e.preventDefault();
+  const items = rfqItems(), msg = document.getElementById('rfq-msg');
+  if (!items.length) { msg.style.color = 'var(--coral-dark)'; msg.textContent = 'Please add at least one case.'; return false; }
+  const v = id => document.getElementById(id).value.trim();
+  const data = { business: v('q-business'), name: v('q-name'), email: v('q-email'), phone: v('q-phone'), a1: v('q-a1'), a2: v('q-a2'), city: v('q-city'), state: v('q-state'), zip: v('q-zip'),
+    payment: v('q-payment'), resale: document.getElementById('q-resale').checked, notes: v('q-notes'), website: v('q-website'), items };
+  const btn = e.target.querySelector('button[type=submit]'); btn.disabled = true; const t = btn.textContent; btn.textContent = 'Sending…';
+  try {
+    const r = await fetch('/api/rfq', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(j.error || 'Could not send. Please email support@wholesalesquishy.com');
+    if (window.wsqTrack) wsqTrack('generate_lead', { lead_type: 'rfq', value: 0, currency: 'USD' });
+    e.target.reset(); rfqEstimate();
+    msg.style.color = '#3D6B40'; msg.innerHTML = `<b>Thank you! Quote request #${j.id} sent.</b> We emailed you a copy and will reply within 1 business day. Estimated total: ${j.estimate}.`;
+  } catch (err) { msg.style.color = 'var(--coral-dark)'; msg.textContent = err.message; }
+  btn.disabled = false; btn.textContent = t;
+  return false;
+}
+document.addEventListener('DOMContentLoaded', renderRfqItems);
+</script>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div><div class="display" style="font-size:20px;font-weight:700;color:#fff;margin-bottom:10px;">Wholesale Squishy</div><div style="font-size:14px;color:#B7ACA1;line-height:1.6;max-width:280px;">Wholesale squishy toys for retailers, vending operators, and gift shops. Shipped from the US.</div></div>
+    <div><h3>Shop</h3><a href="/#bestsellers">Dumplings &amp; Buns</a><a href="/#bestsellers">Fruit &amp; Novelty</a></div>
+    <div><h3>Company</h3><a href="about.html">About Us</a><a href="rfq.html">Contact</a><a href="faq.html">FAQ</a><a href="safety.html">Safety &amp; Documents</a><a href="rfq.html">Request a Bulk Quote</a></div>
+    <div><h3>Policies</h3><a href="shipping.html">Shipping Policy</a><a href="returns.html">Return Policy</a><a href="refunds.html">Refund Policy</a><a href="terms.html">Terms &amp; Conditions</a><a href="privacy.html">Privacy Policy</a></div>
+  </div>
+  <div class="footer-bottom">© 2026 Wholesale Squishy. All rights reserved. · 12508 Center St, Suite 5, South Gate, CA 90280</div>
+</footer>
+
+
+<script src="js/pricing.js"></script>
+<script src="js/cart.js"></script>
+</body>
+</html>

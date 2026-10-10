@@ -114,13 +114,10 @@
   <div style="display:flex;flex-direction:column;gap:16px;">
     <div style="background:var(--coral-tint);border-radius:26px;height:460px;display:flex;align-items:center;justify-content:center;position:relative;">
       <span style="position:absolute;top:20px;left:20px;background:var(--sage);color:#20361F;font-size:12px;font-weight:700;padding:6px 14px;border-radius:999px;">Ready to Ship</span>
-      <img src="images/fr-34.webp" alt="Strawberry Pink Butter Squishy" style="width:320px;max-width:80%;">
+      <img id="main-img" src="images/fr-34.webp" alt="Strawberry Pink Butter Squishy" style="width:320px;max-width:80%;">
     </div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+    <div id="gallery-thumbs" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
       <div class="thumb active"><img src="images/fr-34-thumb.webp" alt="Strawberry Pink Butter Squishy thumbnail" style="width:46px;"></div>
-      <div class="thumb"><div style="width:34px;height:34px;border-radius:10px;background:var(--cream-deep);"></div></div>
-      <div class="thumb"><div style="width:34px;height:34px;border-radius:10px;background:var(--cream-deep);"></div></div>
-      <div class="thumb"><div style="font-size:11px;color:var(--ink-soft);font-weight:700;text-align:center;">+ case<br>photo</div></div>
     </div>
   </div>
 
@@ -128,7 +125,7 @@
     <div class="eyebrow" style="color:var(--coral-dark);">Fruit &amp; Novelty</div>
     <h1 class="display" style="font-size:clamp(26px,4vw,34px);font-weight:700;margin:0;letter-spacing:-0.5px;line-height:1.1;">Strawberry Pink Butter Squishy, Wholesale Case</h1>
     <div style="display:flex;align-items:center;gap:10px;">
-      <span style="font-size:13px;color:var(--ink-soft);">New listing &mdash; no reviews yet</span>
+      <span style="font-size:13px;color:var(--ink-soft);">Wholesale case pack &middot; ships from our US warehouse</span>
     </div>
 
     <p style="font-size:15.5px;line-height:1.6;color:var(--ink-soft);margin:4px 0 0 0;">Slow-rise butter-shape squishy in a soft pink strawberry finish. Compact size fits checkout-counter bowls, vending capsules, and gift-shop shelf bins. A low-cost, high-turn opener for testing a new case with a buyer.</p>
@@ -155,7 +152,7 @@
     </div>
 
     <div class="ship-pill" style="margin-top:14px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" style="flex:none"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z" stroke="#2F5A32" stroke-width="2" stroke-linejoin="round"/><circle cx="7" cy="17.5" r="1.8" fill="#2F5A32"/><circle cx="17" cy="17.5" r="1.8" fill="#2F5A32"/></svg><span>Orders processed immediately.<br><span style="font-weight:600;">Delivery within 5 working days (most US addresses).</span></span></div>
-<div style="margin-top:14px;padding:12px 14px;background:var(--cream-deep);border-radius:12px;font-size:13px;line-height:1.55;color:var(--ink-soft);"><b style="color:var(--ink);">Order terms:</b> No minimum order: start from 1 case, mix any styles. Shipping is about $12 + $2.50 per case, <b style="color:var(--ink);">free from $5,000</b>. Volume pricing applies from 50 pieces. Freight is quoted separately above $15,000.</div>
+<div style="margin-top:14px;padding:12px 14px;background:var(--cream-deep);border-radius:12px;font-size:13px;line-height:1.55;color:var(--ink-soft);"><b style="color:var(--ink);">Order terms:</b> No minimum order: start from 1 case, mix any styles. Shipping is about $12 + $2.50 per case, <b style="color:var(--ink);">free from $5,000</b>. Volume pricing applies from 50 pieces. Freight is quoted separately above $15,000. <a href="rfq.html" style="color:var(--coral-dark);font-weight:700;">Request a quote for invoices or large orders</a>.</div>
 
 
     <div style="display:flex;gap:22px;margin-top:10px;padding-top:20px;border-top:1px solid var(--line);flex-wrap:wrap;">
@@ -245,7 +242,7 @@
   <div class="footer-grid">
     <div><div class="display" style="font-size:20px;font-weight:700;color:#fff;margin-bottom:10px;">Wholesale Squishy</div><div style="font-size:14px;color:#B7ACA1;line-height:1.6;max-width:280px;">Wholesale squishy toys for retailers, vending operators, and gift shops. Shipped from the US.</div></div>
     <div><h3>Shop</h3><a href="/#bestsellers">Dumplings &amp; Buns</a><a href="/#bestsellers">Fruit &amp; Novelty</a></div>
-    <div><h3>Company</h3><a href="about.html">About Us</a><a href="contact.html">Contact</a><a href="faq.html">FAQ</a><a href="safety.html">Safety &amp; Documents</a><a href="cart.html">Wholesale &amp; RFQ</a></div>
+    <div><h3>Company</h3><a href="about.html">About Us</a><a href="contact.html">Contact</a><a href="faq.html">FAQ</a><a href="safety.html">Safety &amp; Documents</a><a href="rfq.html">Request a Bulk Quote</a></div>
     <div><h3>Policies</h3><a href="shipping.html">Shipping Policy</a><a href="returns.html">Return Policy</a><a href="refunds.html">Refund Policy</a><a href="terms.html">Terms &amp; Conditions</a><a href="privacy.html">Privacy Policy</a></div>
   </div>
   <div class="footer-bottom">© 2026 Wholesale Squishy. All rights reserved. · 12508 Center St, Suite 5, South Gate, CA 90280</div>
@@ -253,5 +250,26 @@
 
 <script src="js/pricing.js"></script>
 <script src="js/cart.js"></script>
+<script>
+// Extra REAL photos: drop files named images/gallery/<sku>-2.jpg ... -6.jpg (sku in lowercase) and they appear here automatically.
+document.addEventListener('DOMContentLoaded', function () {
+  var card = document.querySelector('[data-product]'); var box = document.getElementById('gallery-thumbs'); var main = document.getElementById('main-img');
+  if (!card || !box || !main) return;
+  var sku = card.dataset.sku.toLowerCase(), orig = { src: main.getAttribute('src'), style: main.getAttribute('style') };
+  var first = box.querySelector('.thumb');
+  function activate(t) { Array.prototype.forEach.call(box.querySelectorAll('.thumb'), function (x) { x.classList.remove('active'); }); t.classList.add('active'); }
+  first.addEventListener('click', function () { main.src = orig.src; main.setAttribute('style', orig.style); activate(first); });
+  for (var n = 2; n <= 6; n++) (function (n) {
+    var url = 'images/gallery/' + sku + '-' + n + '.jpg', im = new Image();
+    im.onload = function () {
+      var t = document.createElement('div'); t.className = 'thumb'; t.style.overflow = 'hidden'; t.style.padding = '0';
+      t.innerHTML = '<img src="' + url + '" alt="Product photo ' + n + '" style="width:100%;height:100%;object-fit:cover;">';
+      t.addEventListener('click', function () { main.src = url; main.setAttribute('style', 'width:100%;height:100%;object-fit:cover;border-radius:26px;'); activate(t); });
+      box.appendChild(t);
+    };
+    im.src = url;
+  })(n);
+});
+</script>
 </body>
 </html>

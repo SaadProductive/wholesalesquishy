@@ -121,7 +121,7 @@
   <div class="footer-grid">
     <div><div class="display" style="font-size:20px;font-weight:700;color:#fff;margin-bottom:10px;">Wholesale Squishy</div><div style="font-size:14px;color:#B7ACA1;line-height:1.6;max-width:280px;">Wholesale squishy toys for retailers, vending operators, and gift shops. Shipped from the US.</div></div>
     <div><h3>Shop</h3><a href="/#bestsellers">Dumplings &amp; Buns</a><a href="/#bestsellers">Fruit &amp; Novelty</a></div>
-    <div><h3>Company</h3><a href="about.html">About Us</a><a href="contact.html">Contact</a><a href="faq.html">FAQ</a><a href="safety.html">Safety &amp; Documents</a><a href="cart.html">Wholesale &amp; RFQ</a></div>
+    <div><h3>Company</h3><a href="about.html">About Us</a><a href="contact.html">Contact</a><a href="faq.html">FAQ</a><a href="safety.html">Safety &amp; Documents</a><a href="rfq.html">Request a Bulk Quote</a></div>
     <div><h3>Policies</h3><a href="shipping.html">Shipping Policy</a><a href="returns.html">Return Policy</a><a href="refunds.html">Refund Policy</a><a href="terms.html">Terms &amp; Conditions</a><a href="privacy.html">Privacy Policy</a></div>
   </div>
   <div class="footer-bottom">© 2026 Wholesale Squishy. All rights reserved. · 12508 Center St, Suite 5, South Gate, CA 90280</div>
@@ -208,7 +208,7 @@ function renderCartPage() {
   } else if (calc.quote) {
     goal = null;
     text = '';
-    btn.textContent = 'Request Freight Quote';
+    btn.textContent = 'Request a Quote / Invoice';
     note.style.display = 'block'; note.style.color = 'var(--ink-soft)';
     note.textContent = `Orders above ${WSQ.money(WSQ.CONFIG.QUOTE_ABOVE).replace('.00','')} ship by freight. We quote shipping separately and send an invoice.`;
   } else if (calc.mode !== 'free') {
@@ -228,7 +228,7 @@ function renderCartPage() {
   const nt = WSQ.nextTier(pieces);
   const hint = document.getElementById('cart-tier-hint');
   if (hint) hint.innerHTML = nt ? `Add <b>${nt.pcsToGo} more pcs</b> to unlock <b>${Math.round((1 - nt.ratio) * 1000) / 10}% off</b> per piece (${nt.minPcs}+ pcs, mix any styles).` : 'Best volume price unlocked.';
-  if (hint) hint.innerHTML += ' Ordering $5,000+? <a href="contact.html?subject=Bulk%20quote%20request" style="color:var(--coral-dark);font-weight:700;">Request a bulk quote</a>.';
+  if (hint) hint.innerHTML += ' Ordering $5,000+? <a href="rfq.html" style="color:var(--coral-dark);font-weight:700;">Request a bulk quote</a>.';
 }
 
 async function cartCheckout() {
@@ -236,9 +236,7 @@ async function cartCheckout() {
   if (calc.belowMin) return;
   if (calc.quote) {
     if (window.wsqTrack) wsqTrack('generate_lead', { lead_type: 'freight_quote', value: calc.subtotal, currency: wsqCurrency });
-    location.href = 'contact.html?subject=' + encodeURIComponent('Freight quote request') +
-      '&message=' + encodeURIComponent('Hello, I would like a freight quote for my cart: ' +
-        getCart().map(i => i.sku + ' x' + i.qty).join(', ') + ' (subtotal ' + WSQ.money(calc.subtotal) + '). Ship-to ZIP: ');
+    location.href = 'rfq.html';
     return;
   }
   const btn = document.getElementById('checkout-btn');
