@@ -168,3 +168,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+
+// One-step checkout: send {sku, qty} to the server, then go straight to Stripe (it collects email, phone, shipping address and card).
+async function wsqStartCheckout(onState) {
+  const cart = getCart();
+  if (!cart.length) return { ok: false, error: 'Your cart is empty.' };
+  const calc = WSQ.shippingFor(cart);
+  if (calc.quote) return { ok: false, error: 'Orders above ' + WSQ.money(WSQ.CONFIG.QUOTE_ABOVE) + ' ship by freight. Please request a freight quote.' };
+  if (onState) onState('busy');
+  try {
+    if (window.wsqTrack) wsqTrack('begin_checkout', { ecommerce: { currency: wsqCurrency, value: calc.subtotal, items: wsqItems(cart) } });
+    const res = await fetch('/api/create-checkout-session', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: cart.map(function (i) { return { sku: i.sku, qty: i.qty }; }) })
+    });
+    let data = null;
+    try { data = await res.json(); } catch (e) {}
+    if (!res.ok || !data || !data.url) throw new Error((data && data.error) || 'We could not start checkout. Please try again, or email support@wholesalesquishy.com and we will complete your order manually.');
+    try { sessionStorage.setItem('wsq_last_order', JSON.stringify({ items: wsqItems(cart), value: Math.round((calc.subtotal + calc.amount) * 100) / 100, shipping: calc.amount, subtotal: calc.subtotal })); } catch (e) {}
+    window.location = data.url;
+    return { ok: true };
+  } catch (err) {
+    if (onState) onState('idle');
+    return { ok: false, error: (err && err.message) || 'Something went wrong. Please try again.' };
+  }
+}

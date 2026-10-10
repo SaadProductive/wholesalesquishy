@@ -34,6 +34,7 @@
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M5HRM57B" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
+<div class="ship-bar"><b>Orders processed immediately</b> &middot; Delivery within 5 working days <a href="shipping.html">details</a></div>
 <nav class="nav">
   <a href="/" class="nav-brand"><img src="images/logo-mark.svg" alt="Wholesale Squishy logo"><span>Wholesale Squishy</span></a>
   <div class="nav-links">
@@ -71,32 +72,38 @@
   <p>For case-pack pricing, custom quotes, or reseller accounts, email us with your business name and the quantity you're looking for, or use the <a href="cart.html">Wholesale &amp; RFQ</a> page.</p>
 
   <h2>Send a Message</h2>
-  <p style="font-size:13px;">Fill this out and it opens a pre-filled email to <strong>support@wholesalesquishy.com</strong> in your email app so you can review and send it &mdash; nothing is transmitted from this page directly.</p>
+  <p style="font-size:13px;">Send us your question or quote request and we reply by email, usually within 1 business day.</p>
   <form id="contact-form" onsubmit="return submitContactForm(event);">
     <input class="field" id="cf-name" placeholder="Your name" required />
     <input class="field" id="cf-email" type="email" placeholder="Email address" required />
     <input class="field" id="cf-subject" placeholder="Subject" required />
     <textarea class="field" id="cf-message" rows="5" placeholder="Message" required></textarea>
+    <input type="text" id="cf-website" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;" aria-hidden="true" />
     <button type="submit" class="btn btn-primary" style="padding:14px 28px;">Send Message</button>
   </form>
 </div>
 
 <script>
-function submitContactForm(e) {
+async function submitContactForm(e) {
   e.preventDefault();
-  const name = document.getElementById('cf-name').value.trim();
-  const email = document.getElementById('cf-email').value.trim();
-  const subject = document.getElementById('cf-subject').value.trim();
-  const message = document.getElementById('cf-message').value.trim();
-  if (!name || !email || !subject || !message) {
-    showToast('Please fill in every field.');
-    return false;
+  const v = id => document.getElementById(id).value.trim();
+  const data = { name: v('cf-name'), email: v('cf-email'), subject: v('cf-subject'), message: v('cf-message'), website: v('cf-website') };
+  if (!data.name || !data.email || !data.subject || !data.message) { showToast('Please fill in every field.'); return false; }
+  const btn = e.target.querySelector('button[type=submit]'); btn.disabled = true; const t = btn.textContent; btn.textContent = 'Sending…';
+  try {
+    const r = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(j.error || 'failed');
+    if (window.wsqTrack) wsqTrack('generate_lead', { lead_type: 'contact_form' });
+    e.target.reset();
+    showToast('Thanks! Message sent. We will reply by email.');
+  } catch (err) {
+    // fallback so a lead is never lost: open the buyer's mail app
+    const body = `Name: ${data.name}\nEmail: ${data.email}\n\n${data.message}`;
+    showToast('Could not send here, opening your email app instead…');
+    location.href = `mailto:support@wholesalesquishy.com?subject=${encodeURIComponent(data.subject)}&body=${encodeURIComponent(body)}`;
   }
-  const body = `Name: ${name}\nEmail: ${email}\n\n${message}`;
-  const mailto = `mailto:support@wholesalesquishy.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  if (window.wsqTrack) wsqTrack('generate_lead', { lead_type: 'contact_form' });
-  window.location.href = mailto;
-  showToast('Opening your email app to send this message…');
+  btn.disabled = false; btn.textContent = t;
   return false;
 }
 </script>
@@ -107,7 +114,7 @@ function submitContactForm(e) {
   <div class="footer-grid">
     <div><div class="display" style="font-size:20px;font-weight:700;color:#fff;margin-bottom:10px;">Wholesale Squishy</div><div style="font-size:14px;color:#B7ACA1;line-height:1.6;max-width:280px;">Wholesale squishy toys for retailers, vending operators, and gift shops. Shipped from the US.</div></div>
     <div><h3>Shop</h3><a href="/#bestsellers">Dumplings &amp; Buns</a><a href="/#bestsellers">Fruit &amp; Novelty</a></div>
-    <div><h3>Company</h3><a href="about.html">About Us</a><a href="contact.html">Contact</a><a href="faq.html">FAQ</a><a href="cart.html">Wholesale &amp; RFQ</a></div>
+    <div><h3>Company</h3><a href="about.html">About Us</a><a href="contact.html">Contact</a><a href="faq.html">FAQ</a><a href="safety.html">Safety &amp; Documents</a><a href="cart.html">Wholesale &amp; RFQ</a></div>
     <div><h3>Policies</h3><a href="shipping.html">Shipping Policy</a><a href="returns.html">Return Policy</a><a href="refunds.html">Refund Policy</a><a href="terms.html">Terms &amp; Conditions</a><a href="privacy.html">Privacy Policy</a></div>
   </div>
   <div class="footer-bottom">© 2026 Wholesale Squishy. All rights reserved. · 12508 Center St, Suite 5, South Gate, CA 90280</div>

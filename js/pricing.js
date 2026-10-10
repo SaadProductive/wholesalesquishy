@@ -4,7 +4,7 @@
 // server charges. Edit the numbers in CONFIG and the CATALOG only here.
 (function (root) {
   const CONFIG = {
-    MIN_ORDER: 150,            // minimum order value (merchandise subtotal after volume pricing), USD
+    MIN_ORDER: 0,              // no minimum order value (smallest order = 1 case); set a number here to bring one back
     // Shipping is charged near real cost. Fitted from 5 real orders (2 to 5 cases, CA/TX/AL/FL):
     // real cost ~ $9.30 + $2.35 per case. We charge a little above that so shipping never loses money.
     SHIP_BASE: 12,             // flat part per order

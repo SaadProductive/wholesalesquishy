@@ -11,6 +11,7 @@ const Stripe = require('stripe');
 const WSQ = require('../js/pricing.js');
 
 const SITE = process.env.SITE_URL || 'https://wholesalesquishy.com';
+const CARRIERS = ['USPS', 'UPS', 'FedEx', 'DHL', 'Other'];
 const STATUSES = ['New', 'Confirmed', 'Packing', 'Shipped', 'Delivered', 'On hold', 'Out of stock'];
 const STATUS_COLORS = { 'New': [1, 0.95, 0.7], 'Confirmed': [0.8, 0.9, 1], 'Packing': [1, 0.85, 0.7], 'Shipped': [0.75, 0.93, 0.78], 'Delivered': [0.6, 0.85, 0.65], 'On hold': [0.9, 0.9, 0.9], 'Out of stock': [1, 0.78, 0.78] };
 
@@ -28,10 +29,10 @@ const SHEETS = {
   warehouse: {
     env: 'WAREHOUSE_SHEET_ID', keyCol: 1, statusCol: 'Status',
     headers: ['Order ID', 'Order date', 'Ship to', 'Address 1', 'Address 2', 'City', 'State', 'ZIP', 'Phone',
-      'Product', 'SKU', 'Image', 'Cases', 'Pieces', 'Status', 'Carrier', 'Tracking #', 'Notes'],
-    widths: [110, 95, 150, 180, 90, 100, 60, 70, 110, 260, 90, 110, 60, 70, 110, 100, 150, 200],
+      'Product', 'SKU', 'Image', 'Cases', 'Pieces', 'Status', 'Carrier', 'Tracking #', 'Notes', 'Buyer emailed'],
+    widths: [110, 95, 150, 180, 90, 100, 60, 70, 110, 260, 90, 110, 60, 70, 110, 100, 150, 200, 130],
     row: (o, l) => [o.shortId, o.date.slice(0, 10), o.shipName, o.a1, o.a2, o.city, o.state, o.zip, o.phone,
-      l.title, l.sku, l.image, l.cases, l.pieces, 'New', '', '', '']
+      l.title, l.sku, l.image, l.cases, l.pieces, 'New', '', '', '', '']
   }
 };
 
@@ -89,6 +90,7 @@ async function setupSheet(id, cfg, token, sheetId, tab) {
     { repeatCell: { range: range(0, cfg.headers.length), cell: { userEnteredFormat: { verticalAlignment: 'MIDDLE', wrapStrategy: 'WRAP' } }, fields: 'userEnteredFormat(verticalAlignment,wrapStrategy)' } },
     { updateDimensionProperties: { range: { sheetId, dimension: 'ROWS', startIndex: 1, endIndex: 1000 }, properties: { pixelSize: 100 }, fields: 'pixelSize' } },
     { setDataValidation: { range: range(col, col + 1), rule: { condition: { type: 'ONE_OF_LIST', values: STATUSES.map((v) => ({ userEnteredValue: v })) }, showCustomUi: true, strict: false } } },
+    ...(cfg.headers.indexOf('Carrier') >= 0 ? [{ setDataValidation: { range: range(cfg.headers.indexOf('Carrier'), cfg.headers.indexOf('Carrier') + 1), rule: { condition: { type: 'ONE_OF_LIST', values: CARRIERS.map((v) => ({ userEnteredValue: v })) }, showCustomUi: true, strict: false } } }] : []),
     { setBasicFilter: { filter: { range: { sheetId, startRowIndex: 0, startColumnIndex: 0, endColumnIndex: cfg.headers.length } } } }
   ];
   cfg.widths.forEach((w, i) => requests.push({ updateDimensionProperties: { range: { sheetId, dimension: 'COLUMNS', startIndex: i, endIndex: i + 1 }, properties: { pixelSize: w }, fields: 'pixelSize' } }));
@@ -116,6 +118,38 @@ async function appendTo(cfg, order, lines, token) {
     method: 'POST', body: JSON.stringify({ values })
   });
   return 'logged';
+}
+
+
+// ---------- order confirmation email to the buyer (Gmail SMTP; same env vars as the contact form) ----------
+const esc = (v) => String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+async function emailConfirmation(order, lines) {
+  const user = process.env.GMAIL_USER, pass = process.env.GMAIL_APP_PASSWORD;
+  if (!user || !pass || !order.email) return 'skipped';
+  const nodemailer = require('nodemailer');
+  const support = process.env.SUPPORT_EMAIL || 'support@wholesalesquishy.com';
+  const real = lines.filter((l) => l.sku);
+  const rowsHtml = real.map((l) => `<tr><td style="padding:8px 0;border-bottom:1px solid #EADFCF;">${esc(l.title)}<br><span style="color:#6b5f57;font-size:13px;">${esc(l.cases)} case${l.cases === 1 ? '' : 's'} &middot; ${esc(l.pieces)} pcs</span></td><td style="padding:8px 0;border-bottom:1px solid #EADFCF;text-align:right;white-space:nowrap;">$${esc(l.total)}</td></tr>`).join('');
+  const addr = [order.shipName, order.a1, order.a2, `${order.city}, ${order.state} ${order.zip}`].filter(Boolean).map(esc).join('<br>');
+  const html = `<div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:0 auto;color:#2B2320;">
+  <h2 style="margin:0 0 6px 0;">Thank you for your order${order.name ? ', ' + esc(order.name.split(' ')[0]) : ''}!</h2>
+  <p style="margin:0 0 16px 0;color:#6b5f57;">Order <b>#${esc(order.shortId)}</b> is confirmed and being processed immediately. Delivery within 5 working days for most US addresses (up to 8 to distant states). We will email your tracking number as soon as it ships.</p>
+  <table style="width:100%;border-collapse:collapse;font-size:14px;">${rowsHtml}
+    <tr><td style="padding:8px 0;color:#6b5f57;">Subtotal</td><td style="text-align:right;">$${esc(order.subtotal)}</td></tr>
+    <tr><td style="padding:4px 0;color:#6b5f57;">Shipping</td><td style="text-align:right;">${Number(order.shipping) === 0 ? 'FREE' : '$' + esc(order.shipping)}</td></tr>
+    <tr><td style="padding:8px 0;font-weight:bold;">Total paid</td><td style="text-align:right;font-weight:bold;">$${esc(order.orderTotal)}</td></tr>
+  </table>
+  <p style="margin:18px 0 4px 0;font-weight:bold;">Shipping to</p><p style="margin:0;color:#6b5f57;line-height:1.5;">${addr}</p>
+  <p style="margin:18px 0 0 0;color:#6b5f57;">Questions? Reply to this email or write to <a href="mailto:${esc(support)}">${esc(support)}</a>. Stripe also emails your payment receipt separately.</p>
+  <p style="margin:18px 0 0 0;color:#6b5f57;font-size:13px;">Wholesale Squishy &middot; 12508 Center St, Suite 5, South Gate, CA 90280</p></div>`;
+  const text = `Thank you for your order! Order #${order.shortId} is confirmed and being processed immediately.\n` +
+    real.map((l) => `- ${l.title}: ${l.cases} case(s), ${l.pieces} pcs, $${l.total}`).join('\n') +
+    `\nSubtotal $${order.subtotal} | Shipping $${order.shipping} | Total $${order.orderTotal}\n` +
+    `Delivery within 5 working days for most US addresses. We will email tracking when it ships.\nQuestions: ${support}`;
+  const tx = nodemailer.createTransport({ service: 'gmail', auth: { user, pass } });
+  await tx.sendMail({ from: `"Wholesale Squishy" <${user}>`, to: order.email, bcc: process.env.CONTACT_TO || undefined, replyTo: support,
+    subject: `Order #${order.shortId} confirmed - Wholesale Squishy`, text, html });
+  return 'sent';
 }
 
 async function logOrder(session, stripe) {
@@ -159,6 +193,10 @@ async function logOrder(session, stripe) {
 
   const out = {};
   for (const k of Object.keys(SHEETS)) out[k] = await appendTo(SHEETS[k], order, lines, token);
+  // email only for a NEW order (not a Stripe redelivery), and never let an email problem make Stripe retry the sheet logging
+  if (out.admin !== 'duplicate') {
+    try { out.email = await emailConfirmation(order, lines); } catch (e) { console.error('Confirmation email failed:', e && e.message); out.email = 'failed'; }
+  }
   return out;
 }
 

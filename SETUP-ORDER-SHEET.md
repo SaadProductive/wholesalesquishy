@@ -30,3 +30,40 @@ Place a small test order in Stripe test mode. A row should appear within seconds
 Headers, dropdowns (New/Confirmed/Packing/Shipped/Delivered/On hold/Out of stock), colours, filters and product images are set up automatically on the first order. One row per product line. Status, Carrier, Tracking # and Notes are yours to fill in.
 
 Past orders: Stripe Dashboard, Payments, Export (CSV), then File, Import into a second tab.
+
+---
+
+# Contact form -> your Gmail (5 minutes)
+The contact/quote form now emails you directly (reply goes to the buyer).
+1. In the Gmail account that will send the mail: myaccount.google.com, Security, turn on **2-Step Verification**.
+2. Go to myaccount.google.com/apppasswords, create an app password named "website". Copy the 16 characters.
+3. In Vercel, Settings, Environment Variables, add:
+
+| Name | Value |
+|---|---|
+| `GMAIL_USER` | the Gmail address that sends |
+| `GMAIL_APP_PASSWORD` | the 16-character app password |
+| `CONTACT_TO` | the Gmail where you want to receive messages (can be the same one) |
+
+4. Redeploy, then send yourself a test message from the Contact page.
+Never paste the app password into a chat. If the form fails, the buyer's mail app opens as a fallback, so no lead is lost.
+
+---
+
+# Emails after the order
+
+## 1. Payment receipt (Stripe, already works)
+Stripe Dashboard, Settings, Customer emails: turn on "Successful payments". Add logo/colours under Settings, Branding.
+
+## 2. Order confirmation (automatic, from our webhook)
+Uses the same Vercel variables as the contact form (`GMAIL_USER`, `GMAIL_APP_PASSWORD`, `CONTACT_TO`). The buyer gets the email within seconds of paying; `CONTACT_TO` gets a BCC copy.
+Optional: `SUPPORT_EMAIL` (reply-to address, default support@wholesalesquishy.com).
+Nothing to do beyond the contact-form setup. If the variables are missing the email is simply skipped.
+
+## 3. Shipped email with tracking (Apps Script in the Warehouse sheet)
+1. Open **WSQ - Warehouse**, Extensions, Apps Script.
+2. Delete what is there, paste the file `apps-script/warehouse-shipping-emails.gs`, Save.
+3. Top menu: choose function `installTrigger`, click Run, approve the permissions (Google shows a "not verified" warning for your own script: Advanced, Go to project).
+4. Test: put a fake order row in, set Status = Shipped, Carrier = UPS, Tracking # = anything. The buyer email (looked up in the Admin sheet) gets the message once. Use your own email in a test row first.
+Packer rule: fill Carrier and Tracking # first, then set Status to Shipped for ALL lines of that order. The script also copies Status and Tracking into the Admin sheet.
+The email is sent from the Google account that owns the Warehouse sheet (Gmail limit ~100/day for personal accounts, 1,500 for Workspace).

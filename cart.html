@@ -41,6 +41,7 @@
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M5HRM57B" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
+<div class="ship-bar"><b>Orders processed immediately</b> &middot; Delivery within 5 working days <a href="shipping.html">details</a></div>
 <nav class="nav">
   <a href="/" class="nav-brand"><img src="images/logo-mark.svg" alt="Wholesale Squishy logo"><span>Wholesale Squishy</span></a>
   <div class="nav-links">
@@ -120,7 +121,7 @@
   <div class="footer-grid">
     <div><div class="display" style="font-size:20px;font-weight:700;color:#fff;margin-bottom:10px;">Wholesale Squishy</div><div style="font-size:14px;color:#B7ACA1;line-height:1.6;max-width:280px;">Wholesale squishy toys for retailers, vending operators, and gift shops. Shipped from the US.</div></div>
     <div><h3>Shop</h3><a href="/#bestsellers">Dumplings &amp; Buns</a><a href="/#bestsellers">Fruit &amp; Novelty</a></div>
-    <div><h3>Company</h3><a href="about.html">About Us</a><a href="contact.html">Contact</a><a href="faq.html">FAQ</a><a href="cart.html">Wholesale &amp; RFQ</a></div>
+    <div><h3>Company</h3><a href="about.html">About Us</a><a href="contact.html">Contact</a><a href="faq.html">FAQ</a><a href="safety.html">Safety &amp; Documents</a><a href="cart.html">Wholesale &amp; RFQ</a></div>
     <div><h3>Policies</h3><a href="shipping.html">Shipping Policy</a><a href="returns.html">Return Policy</a><a href="refunds.html">Refund Policy</a><a href="terms.html">Terms &amp; Conditions</a><a href="privacy.html">Privacy Policy</a></div>
   </div>
   <div class="footer-bottom">© 2026 Wholesale Squishy. All rights reserved. · 12508 Center St, Suite 5, South Gate, CA 90280</div>
@@ -172,7 +173,7 @@ function renderCartPage() {
 
   const { pieces, subtotal, count } = cartTotals();
   const calc = WSQ.shippingFor(cart);
-  subline.textContent = `${count} item${count === 1 ? '' : 's'} · ${calc.boxes} case${calc.boxes === 1 ? '' : 's'} · Minimum order ${WSQ.money(WSQ.CONFIG.MIN_ORDER)} · Free shipping from ${WSQ.money(WSQ.CONFIG.FREE_SHIPPING_FROM).replace('.00','')}`;
+  subline.textContent = `${count} item${count === 1 ? '' : 's'} · ${calc.boxes} case${calc.boxes === 1 ? '' : 's'} · Free shipping from ${WSQ.money(WSQ.CONFIG.FREE_SHIPPING_FROM).replace('.00','')}`;
   document.getElementById('cart-pieces-label').textContent = `Subtotal (${pieces} pcs)`;
   document.getElementById('cart-subtotal').textContent = WSQ.money(subtotal);
 
@@ -196,7 +197,7 @@ function renderCartPage() {
   const note = document.getElementById('cart-notice');
   note.style.display = 'none';
   btn.disabled = false;
-  btn.textContent = 'Proceed to Checkout';
+  btn.textContent = 'Checkout securely';
   let goal, left, text;
   if (calc.belowMin) {
     goal = calc.minOrder; left = calc.toMin;
@@ -230,7 +231,7 @@ function renderCartPage() {
   if (hint) hint.innerHTML += ' Ordering $5,000+? <a href="contact.html?subject=Bulk%20quote%20request" style="color:var(--coral-dark);font-weight:700;">Request a bulk quote</a>.';
 }
 
-function cartCheckout() {
+async function cartCheckout() {
   const calc = WSQ.shippingFor(getCart());
   if (calc.belowMin) return;
   if (calc.quote) {
@@ -240,7 +241,14 @@ function cartCheckout() {
         getCart().map(i => i.sku + ' x' + i.qty).join(', ') + ' (subtotal ' + WSQ.money(calc.subtotal) + '). Ship-to ZIP: ');
     return;
   }
-  location.href = 'checkout.html';
+  const btn = document.getElementById('checkout-btn');
+  const note = document.getElementById('cart-notice');
+  const label = btn.textContent;
+  const r = await wsqStartCheckout(function (st) {
+    btn.disabled = st === 'busy';
+    btn.textContent = st === 'busy' ? 'Taking you to secure payment…' : label;
+  });
+  if (!r.ok) { note.style.display = 'block'; note.style.color = 'var(--coral-dark)'; note.textContent = r.error; }
 }
 
 document.addEventListener('DOMContentLoaded', function () {
