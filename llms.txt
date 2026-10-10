@@ -1,0 +1,20 @@
+# Wholesale Squishy
+
+> US wholesale supplier of squishy toys sold by the case (6 or 12 pieces per case) to retailers, gift and novelty shops, scoop/vending machine operators and procurement buyers. Ships from South Gate, California within 1 business day. US shipping only.
+
+## Key facts
+- Minimum order: $150 (mix any styles).
+- Volume pricing by total pieces in the order: 50+ pcs 6.2% off, 100+ 9.9%, 250+ 12%, 500+ 12.9%, 1000+ 13.5%.
+- Shipping: about $12 + $2.50 per case (ground, tracked). Free standard shipping on orders from $5,000 to $15,000. Freight quoted separately above $15,000.
+- Payment: card via Stripe checkout. Larger orders: request a quote.
+- Returns: 30 days from delivery; see the return policy.
+- Contact: support@wholesalesquishy.com. Address: 12508 Center St, Suite 5, South Gate, CA 90280.
+
+## Pages
+- [Home and catalog](https://wholesalesquishy.com/)
+- [About](https://wholesalesquishy.com/about.html)
+- [FAQ](https://wholesalesquishy.com/faq.html)
+- [Shipping policy](https://wholesalesquishy.com/shipping.html)
+- [Return policy](https://wholesalesquishy.com/returns.html)
+- [Contact / bulk quote](https://wholesalesquishy.com/contact.html)
+- [Product feed](https://wholesalesquishy.com/google_merchant_feed.csv)

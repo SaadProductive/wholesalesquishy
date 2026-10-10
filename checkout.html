@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Checkout | Wholesale Squishy</title>
 <meta name="description" content="Checkout for your Wholesale Squishy bulk squishy toy order.">
+<meta property="og:site_name" content="Wholesale Squishy">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Checkout | Wholesale Squishy">
+<meta property="og:description" content="Checkout for your Wholesale Squishy bulk squishy toy order.">
+<meta property="og:url" content="https://wholesalesquishy.com/checkout.html">
+<meta property="og:image" content="https://wholesalesquishy.com/images/og-default.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Checkout | Wholesale Squishy">
+<meta name="twitter:description" content="Checkout for your Wholesale Squishy bulk squishy toy order.">
+<meta name="twitter:image" content="https://wholesalesquishy.com/images/og-default.jpg">
 <link rel="canonical" href="https://wholesalesquishy.com/checkout.html">
 <link rel="icon" href="images/logo-mark.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/style.css">
@@ -15,8 +25,12 @@
   .pay-option.selected{border-color:var(--coral);background:var(--coral-tint);}
   .summary-line{display:flex;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:14px;}
 </style>
+<script src="js/analytics.js"></script>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M5HRM57B" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
 <nav class="nav">
   <a href="/" class="nav-brand"><img src="images/logo-mark.svg" alt="Wholesale Squishy logo"><span>Wholesale Squishy</span></a>
@@ -68,17 +82,12 @@
     </div>
 
     <div>
-      <h2 class="display" style="font-size:17px;font-weight:700;margin-bottom:14px;">3. Shipping Method</h2>
-      <div style="display:flex;flex-direction:column;gap:10px;">
-        <div class="pay-option selected" data-ship="8.00" data-ship-label="USPS Ground Advantage" onclick="selectShip(this)">
-          <div style="display:flex;align-items:center;gap:10px;"><div style="width:16px;height:16px;border-radius:999px;border:5px solid var(--coral);"></div><span style="font-weight:600;font-size:14px;">USPS Ground Advantage (3–5 business days)</span></div>
-          <span style="font-weight:700;font-size:14px;">$8.00</span>
-        </div>
-        <div class="pay-option" data-ship="19.50" data-ship-label="UPS 2-Day" onclick="selectShip(this)">
-          <div style="display:flex;align-items:center;gap:10px;"><div style="width:16px;height:16px;border-radius:999px;border:1.5px solid var(--line);"></div><span style="font-weight:600;font-size:14px;">UPS 2-Day</span></div>
-          <span style="font-weight:700;font-size:14px;">$19.50</span>
-        </div>
+      <h2 class="display" style="font-size:17px;font-weight:700;margin-bottom:14px;">3. Shipping</h2>
+      <div class="pay-option selected" style="cursor:default;">
+        <div style="display:flex;align-items:center;gap:10px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 12L9 18L21 6" stroke="var(--coral)" stroke-width="2.5" stroke-linecap="round"/></svg><span id="ship-method-label" style="font-weight:600;font-size:14px;">Standard ground shipping</span></div>
+        <span id="ship-method-price" style="font-weight:700;font-size:14px;">-</span>
       </div>
+      <div id="ship-method-note" style="font-size:12.5px;color:var(--ink-soft);margin-top:8px;line-height:1.5;">Ships from California within 1 business day. Typical transit 3 to 8 business days. Continental US.</div>
     </div>
 
     <div>
@@ -124,23 +133,9 @@
   <div class="footer-bottom">© 2026 Wholesale Squishy. All rights reserved. · 12508 Center St, Suite 5, South Gate, CA 90280</div>
 </footer>
 
+<script src="js/pricing.js"></script>
 <script src="js/cart.js"></script>
 <script>
-let shipCost = 8.00;
-  let shipLabel = 'USPS Ground Advantage';
-
-function selectShip(el) {
-  document.querySelectorAll('.pay-option').forEach(o => {
-    o.classList.remove('selected');
-    o.querySelector('div div').style.border = '1.5px solid var(--line)';
-  });
-  el.classList.add('selected');
-  el.querySelector('div div').style.border = '5px solid var(--coral)';
-  shipCost = parseFloat(el.dataset.ship);
-  shipLabel = el.dataset.shipLabel;
-  renderCheckoutSummary();
-}
-
 function renderCheckoutSummary() {
   const cart = getCart();
   if (cart.length === 0) {
@@ -148,6 +143,10 @@ function renderCheckoutSummary() {
     document.getElementById('empty-checkout').style.display = 'block';
     return;
   }
+  const calc = WSQ.shippingFor(cart);
+  // rules are enforced on the server too; here we just send the buyer back to fix the cart
+  if (calc.belowMin || calc.quote) { location.replace('cart.html'); return; }
+
   document.getElementById('checkout-grid').style.display = 'grid';
   document.getElementById('empty-checkout').style.display = 'none';
 
@@ -156,15 +155,17 @@ function renderCheckoutSummary() {
     <div class="summary-line">
       <div style="width:52px;height:52px;background:var(--cream-deep);border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;"><img src="${item.image}" alt="${item.title}" style="width:30px;"></div>
       <div style="flex:1;"><div style="font-size:13.5px;font-weight:700;">${item.title}</div><div style="font-size:12px;color:var(--ink-soft);">Qty ${item.qty}</div></div>
-      <div style="font-weight:700;font-size:14px;">$${(item.qty * item.unitPrice).toFixed(2)}</div>
+      <div style="font-weight:700;font-size:14px;">${WSQ.money(item.qty * item.unitPrice)}</div>
     </div>`).join('');
 
-  const { subtotal } = cartTotals();
-  const total = subtotal + shipCost;
-  document.getElementById('ck-subtotal').textContent = `$${subtotal.toFixed(2)}`;
-  document.getElementById('ck-shipping').textContent = `$${shipCost.toFixed(2)}`;
-  document.getElementById('ck-total').textContent = `$${total.toFixed(2)}`;
-  document.getElementById('pay-amount').textContent = `$${total.toFixed(2)}`;
+  const shipText = calc.amount === 0 ? 'FREE' : WSQ.money(calc.amount);
+  const total = calc.subtotal + calc.amount;
+  document.getElementById('ck-subtotal').textContent = WSQ.money(calc.subtotal);
+  document.getElementById('ck-shipping').textContent = shipText;
+  document.getElementById('ship-method-price').textContent = shipText;
+  document.getElementById('ship-method-label').textContent = calc.label + ' (' + calc.boxes + ' case' + (calc.boxes === 1 ? '' : 's') + ')';
+  document.getElementById('ck-total').textContent = WSQ.money(total);
+  document.getElementById('pay-amount').textContent = WSQ.money(total);
 }
 
 async function placeOrder() {
@@ -182,8 +183,7 @@ async function placeOrder() {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
-                            items: cart.map(i => ({ title: i.title, unitPrice: i.unitPrice, qty: i.qty })),
-                            shipping: { label: shipLabel, amount: shipCost }
+                            items: cart.map(i => ({ sku: i.sku, qty: i.qty }))
                   })
           });
           let data = null;
@@ -191,17 +191,28 @@ async function placeOrder() {
           if (!res.ok || !data || !data.url) {
                   throw new Error((data && data.error) || 'We could not start checkout. Please try again, or email support@wholesalesquishy.com and we will complete your order manually.');
           }
+          try {
+            const calc = WSQ.shippingFor(getCart());
+            sessionStorage.setItem('wsq_last_order', JSON.stringify({ items: wsqItems(getCart()), value: Math.round((calc.subtotal + calc.amount) * 100) / 100, shipping: calc.amount, subtotal: calc.subtotal }));
+          } catch (e) {}
           window.location = data.url;
     } catch (err) {
-          const { subtotal } = cartTotals();
+          const calc = WSQ.shippingFor(getCart());
           errEl.textContent = (err && err.message) || 'Something went wrong. Try again.';
           errEl.style.display = 'block';
           btn.disabled = false;
-          label.innerHTML = `Continue to Payment: <span id="pay-amount">$${(subtotal + shipCost).toFixed(2)}</span>`;
+          label.innerHTML = `Continue to Payment: <span id="pay-amount">${WSQ.money(calc.subtotal + calc.amount)}</span>`;
     }
 }
   
-document.addEventListener('DOMContentLoaded', renderCheckoutSummary);
+document.addEventListener('DOMContentLoaded', function () {
+  renderCheckoutSummary();
+  const cart = getCart();
+  if (cart.length && window.wsqTrack) {
+    const calc = WSQ.shippingFor(cart);
+    wsqTrack('begin_checkout', { ecommerce: { currency: wsqCurrency, value: calc.subtotal, items: wsqItems(cart) } });
+  }
+});
 </script>
 </body>
 </html>

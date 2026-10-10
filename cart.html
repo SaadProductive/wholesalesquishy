@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Your Cart | Wholesale Squishy</title>
 <meta name="description" content="Review your Wholesale Squishy cart and proceed to checkout on bulk squishy toy cases.">
+<meta property="og:site_name" content="Wholesale Squishy">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Your Cart | Wholesale Squishy">
+<meta property="og:description" content="Review your Wholesale Squishy cart and proceed to checkout on bulk squishy toy cases.">
+<meta property="og:url" content="https://wholesalesquishy.com/cart.html">
+<meta property="og:image" content="https://wholesalesquishy.com/images/og-default.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Your Cart | Wholesale Squishy">
+<meta name="twitter:description" content="Review your Wholesale Squishy cart and proceed to checkout on bulk squishy toy cases.">
+<meta name="twitter:image" content="https://wholesalesquishy.com/images/og-default.jpg">
 <link rel="canonical" href="https://wholesalesquishy.com/cart.html">
 <link rel="icon" href="images/logo-mark.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/style.css">
@@ -24,8 +34,12 @@
   .addon-plus{width:26px;height:26px;border-radius:999px;background:var(--coral);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;cursor:pointer;border:none;flex-shrink:0;}
   @media (max-width:480px){.addon-grid{grid-template-columns:minmax(0,1fr) !important;}}
 </style>
+<script src="js/analytics.js"></script>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M5HRM57B" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
 <nav class="nav">
   <a href="/" class="nav-brand"><img src="images/logo-mark.svg" alt="Wholesale Squishy logo"><span>Wholesale Squishy</span></a>
@@ -75,18 +89,17 @@
       <h2 class="display" style="font-size:19px;font-weight:700;margin-bottom:18px;">Order Summary</h2>
       <div style="display:flex;flex-direction:column;gap:12px;font-size:14.5px;">
         <div style="display:flex;justify-content:space-between;color:var(--ink-soft);"><span id="cart-pieces-label">Subtotal (0 pcs)</span><span id="cart-subtotal" style="color:var(--ink);font-weight:600;">$0.00</span></div>
-        <div style="display:flex;justify-content:space-between;color:var(--ink-soft);"><span>Estimated shipping</span><span style="color:var(--ink);font-weight:600;">Calculated at checkout</span></div>
+        <div style="display:flex;justify-content:space-between;color:var(--ink-soft);"><span id="cart-ship-label">Shipping</span><span id="cart-shipping" style="color:var(--ink);font-weight:600;">-</span></div>
         <div style="display:flex;justify-content:space-between;color:var(--ink-soft);"><span>Tax</span><span style="color:var(--ink);font-weight:600;">Calculated at checkout</span></div>
       </div>
-      <div style="display:flex;gap:8px;margin:18px 0;">
-        <input placeholder="Promo code" style="flex:1;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13.5px;font-family:'Plus Jakarta Sans';"/>
-        <button style="background:var(--ink);color:#fff;border:none;border-radius:10px;padding:0 16px;font-weight:700;font-size:13px;cursor:pointer;" onclick="showToast('No promo codes active yet')">Apply</button>
-      </div>
+      <div id="cart-progress" style="margin:18px 0 10px 0;"></div>
+      <div id="cart-tier-hint" style="font-size:12.5px;color:var(--ink-soft);margin-bottom:14px;line-height:1.45;"></div>
       <div style="display:flex;justify-content:space-between;padding-top:16px;border-top:1px solid var(--line);margin-bottom:20px;">
         <span class="display" style="font-size:16px;font-weight:700;">Total</span>
         <span class="display" id="cart-total" style="font-size:22px;font-weight:700;color:var(--coral-dark);">$0.00</span>
       </div>
-      <button class="btn btn-primary" id="checkout-btn" style="width:100%;padding:16px 0;font-size:15.5px;" onclick="location.href='checkout.html'">Proceed to Checkout</button>
+      <button class="btn btn-primary" id="checkout-btn" style="width:100%;padding:16px 0;font-size:15.5px;" onclick="cartCheckout()">Proceed to Checkout</button>
+      <div id="cart-notice" style="display:none;margin-top:12px;font-size:13px;line-height:1.5;text-align:center;"></div>
       <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:14px;font-size:12px;color:var(--ink-soft);">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="4" y="10" width="16" height="10" rx="2" stroke="var(--ink-soft)" stroke-width="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="var(--ink-soft)" stroke-width="2"/></svg>
         Secure checkout via Stripe
@@ -113,6 +126,7 @@
   <div class="footer-bottom">© 2026 Wholesale Squishy. All rights reserved. · 12508 Center St, Suite 5, South Gate, CA 90280</div>
 </footer>
 
+<script src="js/pricing.js"></script>
 <script src="js/cart.js"></script>
 <script>
 function lineItemHtml(item) {
@@ -122,7 +136,7 @@ function lineItemHtml(item) {
       <div class="line-item-top">
         <div>
           <div class="line-item-title">${item.title}</div>
-          <div class="line-item-cat">${item.category}</div>
+          <div class="line-item-cat">${item.category} · ${WSQ.money(item.unitPrice)}/pc</div>
         </div>
         <div class="remove-link" onclick="removeFromCart('${item.sku}')">Remove</div>
       </div>
@@ -132,7 +146,7 @@ function lineItemHtml(item) {
           <input type="number" value="${item.qty}" readonly>
           <button data-step="up" type="button" onclick="setQty('${item.sku}', ${item.qty} + ${item.caseSize})">+</button>
         </div>
-        <div class="line-item-price">$${(item.qty * item.unitPrice).toFixed(2)}</div>
+        <div class="line-item-price">${WSQ.money(item.qty * item.unitPrice)}</div>
       </div>
     </div>
   </div>`;
@@ -157,13 +171,86 @@ function renderCartPage() {
   itemsEl.innerHTML = cart.map(lineItemHtml).join('');
 
   const { pieces, subtotal, count } = cartTotals();
-  subline.textContent = `${count} item${count === 1 ? '' : 's'} · Free shipping unlocks at $150`;
+  const calc = WSQ.shippingFor(cart);
+  subline.textContent = `${count} item${count === 1 ? '' : 's'} · ${calc.boxes} case${calc.boxes === 1 ? '' : 's'} · Minimum order ${WSQ.money(WSQ.CONFIG.MIN_ORDER)} · Free shipping from ${WSQ.money(WSQ.CONFIG.FREE_SHIPPING_FROM).replace('.00','')}`;
   document.getElementById('cart-pieces-label').textContent = `Subtotal (${pieces} pcs)`;
-  document.getElementById('cart-subtotal').textContent = `$${subtotal.toFixed(2)}`;
-  document.getElementById('cart-total').textContent = `$${subtotal.toFixed(2)}`;
+  document.getElementById('cart-subtotal').textContent = WSQ.money(subtotal);
+
+  const shipEl = document.getElementById('cart-shipping');
+  const totalEl = document.getElementById('cart-total');
+  document.getElementById('cart-ship-label').textContent = 'Shipping (' + calc.boxes + ' case' + (calc.boxes === 1 ? '' : 's') + ')';
+  if (calc.quote) {
+    shipEl.textContent = 'Quoted separately';
+    totalEl.textContent = WSQ.money(subtotal) + ' + freight';
+  } else if (calc.mode === 'free') {
+    shipEl.innerHTML = '<span style="color:#3D6B40;">FREE</span>';
+    totalEl.textContent = WSQ.money(subtotal);
+  } else {
+    shipEl.textContent = WSQ.money(calc.amount);
+    totalEl.textContent = WSQ.money(subtotal + calc.amount);
+  }
+
+  // progress: minimum order first, then free shipping
+  const prog = document.getElementById('cart-progress');
+  const btn = document.getElementById('checkout-btn');
+  const note = document.getElementById('cart-notice');
+  note.style.display = 'none';
+  btn.disabled = false;
+  btn.textContent = 'Proceed to Checkout';
+  let goal, left, text;
+  if (calc.belowMin) {
+    goal = calc.minOrder; left = calc.toMin;
+    text = `Add <b>${WSQ.money(left)}</b> more to reach the ${WSQ.money(goal).replace('.00','')} minimum order`;
+    btn.disabled = true;
+    note.style.display = 'block'; note.style.color = 'var(--coral-dark)';
+    note.textContent = `Minimum order is ${WSQ.money(calc.minOrder).replace('.00','')}. Your cart is ${WSQ.money(subtotal)}.`;
+  } else if (calc.quote) {
+    goal = null;
+    text = '';
+    btn.textContent = 'Request Freight Quote';
+    note.style.display = 'block'; note.style.color = 'var(--ink-soft)';
+    note.textContent = `Orders above ${WSQ.money(WSQ.CONFIG.QUOTE_ABOVE).replace('.00','')} ship by freight. We quote shipping separately and send an invoice.`;
+  } else if (calc.mode !== 'free') {
+    goal = WSQ.CONFIG.FREE_SHIPPING_FROM; left = calc.toFree;
+    text = `Add <b>${WSQ.money(left)}</b> more for <b>free shipping</b> (orders ${WSQ.money(goal).replace('.00','')} to ${WSQ.money(WSQ.CONFIG.QUOTE_ABOVE).replace('.00','')})`;
+  } else {
+    goal = null;
+    text = '<span style="color:#3D6B40;font-weight:700;">You unlocked free shipping.</span>';
+  }
+  if (goal) {
+    const pct = Math.max(4, Math.min(100, Math.round(subtotal / goal * 100)));
+    prog.innerHTML = `<div style="font-size:13px;color:var(--ink-soft);margin-bottom:8px;line-height:1.45;">${text}</div>
+      <div style="height:8px;background:var(--line);border-radius:999px;overflow:hidden;"><div style="height:100%;width:${pct}%;background:var(--coral);border-radius:999px;transition:width .25s ease;"></div></div>`;
+  } else {
+    prog.innerHTML = text ? `<div style="font-size:13px;">${text}</div>` : '';
+  }
+  const nt = WSQ.nextTier(pieces);
+  const hint = document.getElementById('cart-tier-hint');
+  if (hint) hint.innerHTML = nt ? `Add <b>${nt.pcsToGo} more pcs</b> to unlock <b>${Math.round((1 - nt.ratio) * 1000) / 10}% off</b> per piece (${nt.minPcs}+ pcs, mix any styles).` : 'Best volume price unlocked.';
+  if (hint) hint.innerHTML += ' Ordering $5,000+? <a href="contact.html?subject=Bulk%20quote%20request" style="color:var(--coral-dark);font-weight:700;">Request a bulk quote</a>.';
 }
 
-document.addEventListener('DOMContentLoaded', renderCartPage);
+function cartCheckout() {
+  const calc = WSQ.shippingFor(getCart());
+  if (calc.belowMin) return;
+  if (calc.quote) {
+    if (window.wsqTrack) wsqTrack('generate_lead', { lead_type: 'freight_quote', value: calc.subtotal, currency: wsqCurrency });
+    location.href = 'contact.html?subject=' + encodeURIComponent('Freight quote request') +
+      '&message=' + encodeURIComponent('Hello, I would like a freight quote for my cart: ' +
+        getCart().map(i => i.sku + ' x' + i.qty).join(', ') + ' (subtotal ' + WSQ.money(calc.subtotal) + '). Ship-to ZIP: ');
+    return;
+  }
+  location.href = 'checkout.html';
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  renderCartPage();
+  const cart = getCart();
+  if (cart.length && window.wsqTrack) {
+    const t = cartTotals();
+    wsqTrack('view_cart', { ecommerce: { currency: wsqCurrency, value: Math.round(t.subtotal * 100) / 100, items: wsqItems(cart) } });
+  }
+});
 </script>
 </body>
 </html>

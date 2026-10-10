@@ -8,8 +8,12 @@
 <meta name="robots" content="noindex">
 <link rel="icon" href="images/logo-mark.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/style.css">
+<script src="js/analytics.js"></script>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M5HRM57B" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
 <nav class="nav">
   <a href="/" class="nav-brand"><img src="images/logo-mark.svg" alt="Wholesale Squishy logo"><span>Wholesale Squishy</span></a>
@@ -32,9 +36,20 @@
                   <div class="footer-bottom" style="text-align:center;padding-top:0;border-top:none;">© 2026 Wholesale Squishy. All rights reserved.</div>
                   </footer>
 
-                  <script src="js/cart.js"></script>
+                  <script src="js/pricing.js"></script>
+<script src="js/cart.js"></script>
                   <script>
                   document.addEventListener('DOMContentLoaded', () => {
+                    try {
+                      const sid = new URLSearchParams(location.search).get('session_id');
+                      const order = JSON.parse(sessionStorage.getItem('wsq_last_order') || 'null');
+                      const done = localStorage.getItem('wsq_tracked_' + sid);
+                      if (sid && order && !done && window.wsqTrack) {
+                        wsqTrack('purchase', { ecommerce: { transaction_id: sid, currency: wsqCurrency, value: order.value, shipping: order.shipping, items: order.items } });
+                        localStorage.setItem('wsq_tracked_' + sid, '1');
+                      }
+                      sessionStorage.removeItem('wsq_last_order');
+                    } catch (e) {}
                     localStorage.removeItem('wsq_cart');
                       updateCartBadge();
                       });

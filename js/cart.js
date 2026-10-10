@@ -2,11 +2,21 @@
 const CART_KEY = 'wsq_cart';
 
 function getCart() {
+  let cart;
   try {
-    return JSON.parse(localStorage.getItem(CART_KEY)) || [];
+    cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
   } catch (e) {
     return [];
   }
+  // always show catalog prices (shared with the server) even if an old cart is in storage
+  if (typeof WSQ !== 'undefined') {
+    const total = cart.reduce((n, i) => n + (Number(i.qty) || 0), 0);
+    cart.forEach(i => {
+      const c = WSQ.CATALOG[i.sku];
+      if (c) { i.basePrice = c.price; i.unitPrice = WSQ.tierPrice(c.price, total); i.caseSize = c.caseSize; i.title = c.title; }
+    });
+  }
+  return cart;
 }
 
 function saveCart(cart) {
@@ -25,6 +35,7 @@ function addToCart(item) {
     cart.push(item);
   }
   saveCart(cart);
+  if (window.wsqTrack) wsqTrack('add_to_cart', { ecommerce: { currency: wsqCurrency, value: Math.round(item.qty * item.unitPrice * 100) / 100, items: wsqItems([item]) } });
   showCartPopup(item);
 }
 
@@ -127,12 +138,24 @@ function wireQtySteppers(root = document) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  // drop out-of-stock items that were added before they sold out
+  if (typeof WSQ !== 'undefined') {
+    try {
+      const raw = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+      const kept = raw.filter(i => !(WSQ.CATALOG[i.sku] && WSQ.CATALOG[i.sku].inStock === false));
+      if (kept.length !== raw.length) {
+        saveCart(kept);
+        showToast('An out-of-stock item was removed from your cart.');
+      }
+    } catch (e) {}
+  }
   updateCartBadge();
   wireQtySteppers();
 
   document.querySelectorAll('[data-add-to-cart]').forEach(btn => {
     btn.addEventListener('click', () => {
       const card = btn.closest('[data-product]');
+      if (card.hasAttribute('data-out-of-stock')) { showToast('Sorry, this item is out of stock.'); return; }
       const sku = card.dataset.sku;
       const title = card.dataset.title;
       const category = card.dataset.category;
