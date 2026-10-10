@@ -1,6 +1,6 @@
 # Wholesale Squishy
 
-> US wholesale supplier of squishy toys sold by the case (6 or 12 pieces per case) to retailers, gift and novelty shops, scoop/vending machine operators and procurement buyers. Ships from South Gate, California within 1 business day. US shipping only.
+> US wholesale supplier of squishy toys sold by the case (6 or 12 pieces per case) to retailers, gift and novelty shops, scoop/vending machine operators and procurement buyers. Ships from South Gate, California; orders processed immediately, delivery within 5 working days. US shipping only.
 
 ## Key facts
 - No minimum order value: the smallest order is one case (6 or 12 pieces), mix any styles.
@@ -20,3 +20,5 @@
 - [Request a bulk quote / invoice](https://wholesalesquishy.com/rfq.html)
 - [Contact / bulk quote](https://wholesalesquishy.com/contact.html)
 - [Product feed](https://wholesalesquishy.com/google_merchant_feed.csv)
+
+Facebook: https://www.facebook.com/WholesaleSquishy
