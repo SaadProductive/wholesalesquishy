@@ -4,7 +4,9 @@
 //
 // Vercel env vars needed (see SETUP-ORDER-SHEET.md):
 //   STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET,
-//   GOOGLE_SHEET_ID (admin sheet), WAREHOUSE_SHEET_ID (warehouse sheet), GOOGLE_SERVICE_ACCOUNT_EMAIL, GOOGLE_PRIVATE_KEY
+//   GOOGLE_SHEET_ID (admin sheet), WAREHOUSE_SHEET_ID (warehouse sheet), and EITHER
+//     FREE:  SHEETS_SCRIPT_URL + SHEETS_SCRIPT_TOKEN (Apps Script web app, apps-script/order-receiver.gs, no Google Cloud)
+//     OR:    GOOGLE_SERVICE_ACCOUNT_EMAIL + GOOGLE_PRIVATE_KEY (Google Cloud service account)
 const crypto = require('crypto');
 const Stripe = require('stripe');
 
@@ -48,6 +50,7 @@ function readRawBody(req) {
 const b64url = (buf) => Buffer.from(buf).toString('base64').replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
 
 async function googleAccessToken() {
+  if (process.env.SHEETS_SCRIPT_URL) return null; // free mode: orders go through the Apps Script web app instead of a Google Cloud service account
   const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
   const key = (process.env.GOOGLE_PRIVATE_KEY || '').replace(/\\n/g, '\n');
   const now = Math.floor(Date.now() / 1000);
@@ -103,9 +106,28 @@ async function setupSheet(id, cfg, token, sheetId, tab) {
   await sheets(id, `/values/${encodeURIComponent(tab)}!A1?valueInputOption=RAW`, token, { method: 'PUT', body: JSON.stringify({ values: [cfg.headers] }) });
 }
 
+const hex = (c) => '#' + c.map((v) => Math.round(v * 255).toString(16).padStart(2, '0')).join('');
+
+// FREE mode: hand the rows to the Apps Script web app (apps-script/order-receiver.gs), which runs as the sheet owner.
+async function appendViaScript(cfg, order, lines) {
+  const statusColors = {};
+  STATUSES.forEach((st) => { statusColors[st] = hex(STATUS_COLORS[st]); });
+  const r = await fetch(process.env.SHEETS_SCRIPT_URL, {
+    method: 'POST', redirect: 'follow', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ token: process.env.SHEETS_SCRIPT_TOKEN, sheetId: process.env[cfg.env], orderId: order.shortId,
+      headers: cfg.headers, widths: cfg.widths, statusCol: cfg.statusCol, statuses: STATUSES, statusColors, carriers: CARRIERS,
+      rows: lines.map((l) => cfg.row(order, l)) })
+  });
+  const txt = await r.text();
+  let j; try { j = JSON.parse(txt); } catch (e) { throw new Error('Sheets script bad response: ' + txt.slice(0, 200)); }
+  if (!j.ok) throw new Error('Sheets script error: ' + j.error);
+  return j.result;
+}
+
 async function appendTo(cfg, order, lines, token) {
   const id = process.env[cfg.env];
   if (!id) return 'skipped (no ' + cfg.env + ')';
+  if (process.env.SHEETS_SCRIPT_URL) return appendViaScript(cfg, order, lines);
   const meta = await sheets(id, '?fields=sheets.properties', token);
   const sh = meta.sheets[0].properties;
   const tab = sh.title;
