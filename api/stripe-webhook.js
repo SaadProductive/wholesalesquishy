@@ -5,7 +5,8 @@
 // Vercel env vars needed (see SETUP-ORDER-SHEET.md):
 //   STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET,
 //   GOOGLE_SHEET_ID (admin sheet), WAREHOUSE_SHEET_ID (warehouse sheet), and EITHER
-//     FREE:  SHEETS_SCRIPT_URL + SHEETS_SCRIPT_TOKEN (Apps Script web app, apps-script/order-receiver.gs, no Google Cloud)
+//     FREE (Make.com): MAKE_WEBHOOK_URL (scenario appends rows to both sheets)
+//     FREE:  SHEETS_SCRIPT_URL (admin) + SHEETS_SCRIPT_URL_WAREHOUSE + SHEETS_SCRIPT_TOKEN (one small script inside each sheet, apps-script/order-receiver.gs, no Google Cloud)
 //     OR:    GOOGLE_SERVICE_ACCOUNT_EMAIL + GOOGLE_PRIVATE_KEY (Google Cloud service account)
 const crypto = require('crypto');
 const Stripe = require('stripe');
@@ -20,7 +21,7 @@ const STATUS_COLORS = { 'New': [1, 0.95, 0.7], 'Confirmed': [0.8, 0.9, 1], 'Pack
 // One row per product line. Admin sheet = everything (money, payment). Warehouse sheet = no prices/payment.
 const SHEETS = {
   admin: {
-    env: 'GOOGLE_SHEET_ID', keyCol: 1, statusCol: 'Status',
+    env: 'GOOGLE_SHEET_ID', urlEnv: 'SHEETS_SCRIPT_URL', keyCol: 1, statusCol: 'Status',
     headers: ['Order date (UTC)', 'Order ID', 'Name', 'Email', 'Phone', 'Ship to', 'Address 1', 'Address 2', 'City', 'State', 'ZIP', 'Country',
       'Product', 'SKU', 'Image', 'Cases', 'Pieces', 'Price / pc', 'Line total', 'Order subtotal', 'Shipping', 'Order total', 'Payment method', 'Payment status',
       'Status', 'Tracking #', 'Notes'],
@@ -29,7 +30,7 @@ const SHEETS = {
       l.title, l.sku, l.image, l.cases, l.pieces, l.unit, l.total, o.subtotal, o.shipping, o.orderTotal, o.method, o.payStatus, 'New', '', '']
   },
   warehouse: {
-    env: 'WAREHOUSE_SHEET_ID', keyCol: 1, statusCol: 'Status',
+    env: 'WAREHOUSE_SHEET_ID', urlEnv: 'SHEETS_SCRIPT_URL_WAREHOUSE', keyCol: 1, statusCol: 'Status',
     headers: ['Order ID', 'Order date', 'Ship to', 'Address 1', 'Address 2', 'City', 'State', 'ZIP', 'Phone',
       'Product', 'SKU', 'Image', 'Cases', 'Pieces', 'Status', 'Carrier', 'Tracking #', 'Notes', 'Buyer emailed'],
     widths: [110, 95, 150, 180, 90, 100, 60, 70, 110, 260, 90, 110, 60, 70, 110, 100, 150, 200, 130],
@@ -50,7 +51,8 @@ function readRawBody(req) {
 const b64url = (buf) => Buffer.from(buf).toString('base64').replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
 
 async function googleAccessToken() {
-  if (process.env.SHEETS_SCRIPT_URL) return null; // free mode: orders go through the Apps Script web app instead of a Google Cloud service account
+  if (process.env.MAKE_WEBHOOK_URL) return null; // Make.com mode (free): Make appends the rows to both sheets
+  if (process.env.SHEETS_SCRIPT_URL || process.env.SHEETS_SCRIPT_URL_WAREHOUSE) return null; // free mode: orders go through the Apps Script web app instead of a Google Cloud service account
   const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
   const key = (process.env.GOOGLE_PRIVATE_KEY || '').replace(/\\n/g, '\n');
   const now = Math.floor(Date.now() / 1000);
@@ -112,7 +114,7 @@ const hex = (c) => '#' + c.map((v) => Math.round(v * 255).toString(16).padStart(
 async function appendViaScript(cfg, order, lines) {
   const statusColors = {};
   STATUSES.forEach((st) => { statusColors[st] = hex(STATUS_COLORS[st]); });
-  const r = await fetch(process.env.SHEETS_SCRIPT_URL, {
+  const r = await fetch(process.env[cfg.urlEnv], {
     method: 'POST', redirect: 'follow', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify({ token: process.env.SHEETS_SCRIPT_TOKEN, sheetId: process.env[cfg.env], orderId: order.shortId,
       headers: cfg.headers, widths: cfg.widths, statusCol: cfg.statusCol, statuses: STATUSES, statusColors, carriers: CARRIERS,
@@ -125,9 +127,10 @@ async function appendViaScript(cfg, order, lines) {
 }
 
 async function appendTo(cfg, order, lines, token) {
+  if (process.env[cfg.urlEnv]) return appendViaScript(cfg, order, lines);
+  if (process.env.SHEETS_SCRIPT_URL || process.env.SHEETS_SCRIPT_URL_WAREHOUSE) return 'skipped (no ' + cfg.urlEnv + ')';
   const id = process.env[cfg.env];
   if (!id) return 'skipped (no ' + cfg.env + ')';
-  if (process.env.SHEETS_SCRIPT_URL) return appendViaScript(cfg, order, lines);
   const meta = await sheets(id, '?fields=sheets.properties', token);
   const sh = meta.sheets[0].properties;
   const tab = sh.title;
@@ -218,7 +221,13 @@ async function logOrder(session, stripe) {
 
 async function finish(order, lines, token) {
   const out = {};
-  for (const k of Object.keys(SHEETS)) out[k] = await appendTo(SHEETS[k], order, lines, token);
+  if (process.env.MAKE_WEBHOOK_URL) {
+    // Make.com mode: one POST; the Make scenario appends to the Admin and Warehouse sheets (Google Sheets API, USER_ENTERED so =IMAGE() works)
+    const r = await fetch(process.env.MAKE_WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderId: order.shortId, adminJson: JSON.stringify(lines.map((l) => SHEETS.admin.row(order, l))), warehouseJson: JSON.stringify(lines.map((l) => SHEETS.warehouse.row(order, l))) }) });
+    if (!r.ok) throw new Error('Make webhook HTTP ' + r.status);
+    out.admin = 'sent to Make'; out.warehouse = 'sent to Make';
+  } else for (const k of Object.keys(SHEETS)) out[k] = await appendTo(SHEETS[k], order, lines, token);
   // email only for a NEW order (not a Stripe redelivery), and never let an email problem make Stripe retry the sheet logging
   if (out.admin !== 'duplicate') {
     try { out.email = await emailConfirmation(order, lines); } catch (e) { console.error('Confirmation email failed:', e && e.message); out.email = 'failed'; }
