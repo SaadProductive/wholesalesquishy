@@ -31,10 +31,10 @@ const SHEETS = {
   },
   warehouse: {
     env: 'WAREHOUSE_SHEET_ID', urlEnv: 'SHEETS_SCRIPT_URL_WAREHOUSE', keyCol: 1, statusCol: 'Status',
-    headers: ['Order ID', 'Order date', 'Ship to', 'Address 1', 'Address 2', 'City', 'State', 'ZIP', 'Phone',
+    headers: ['Order ID', 'Order date', 'Ship to', 'Address 1', 'Address 2', 'City', 'State', 'ZIP',
       'Product', 'SKU', 'Image', 'Cases', 'Pieces', 'Status', 'Carrier', 'Tracking #', 'Notes', 'Buyer emailed'],
-    widths: [110, 95, 150, 180, 90, 100, 60, 70, 110, 260, 90, 110, 60, 70, 110, 100, 150, 200, 130],
-    row: (o, l) => [o.shortId, o.date.slice(0, 10), o.shipName, o.a1, o.a2, o.city, o.state, o.zip, o.phone,
+    widths: [110, 95, 150, 180, 90, 100, 60, 70, 260, 90, 110, 60, 70, 110, 100, 150, 200, 130],
+    row: (o, l) => [o.shortId, o.date.slice(0, 10), o.shipName, o.a1, o.a2, o.city, o.state, o.zip,
       l.title, l.sku, l.image, l.cases, l.pieces, 'New', '', '', '', '']
   }
 };
