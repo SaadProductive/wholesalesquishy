@@ -41,7 +41,13 @@
     'YT666': { title: 'Dumpling Medium Squishy, Soft Squeeze, 12pc case', price: 2.31, caseSize: 12 },
     'T6611': { title: 'Dumpling Medium Squishy, Kawaii, 12pc case', price: 3.85, caseSize: 12 },
     'A-200': { title: 'Octopus Squishy, 24pc case', price: 3.08, caseSize: 24 },
-    'T2440': { title: 'Chocolate Squishy, 12pc case', price: 3.08, caseSize: 12 }
+    'T2440': { title: 'Chocolate Squishy, 12pc case', price: 3.08, caseSize: 12 },
+    'FR-91': { title: 'Salted Butter Squishy, 12pc case', price: 6.16, caseSize: 12 },
+    'YY533': { title: 'Watermelon Squishy, 6pc case', price: 5.39, caseSize: 6 },
+    'YY532': { title: 'Carrot Squishy, 6pc case', price: 12.32, caseSize: 6 },
+    'NM-105': { title: 'Pineapple Squishy, 6pc case', price: 12.32, caseSize: 6 },
+    'WY-104': { title: 'Banana Squishy, 6pc case', price: 12.32, caseSize: 6 },
+    'T6658': { title: 'Goose Squishy, 6pc case', price: 12.32, caseSize: 6 }
   };
 
   const money = (n) => '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
