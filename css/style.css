@@ -170,3 +170,20 @@ input,select,textarea{font-family:inherit;}
   .qty input{height:44px;font-size:16px;}
   input,select,textarea{font-size:16px;}
 }
+
+/* mobile menu */
+.nav-burger{display:none;width:44px;height:44px;border:0;background:none;align-items:center;justify-content:center;cursor:pointer;padding:0;}
+.nav-panel{display:none;}
+@media (max-width:900px){
+  .nav{flex-wrap:wrap;}
+  .nav-burger{display:inline-flex;}
+  .nav-panel:not([hidden]){display:flex;flex-direction:column;flex-basis:100%;order:3;padding:8px 0 4px;margin-top:10px;border-top:1px solid var(--line);}
+  .nav-panel a{display:flex;align-items:center;min-height:48px;font-size:16px;font-weight:600;color:var(--ink);border-bottom:1px solid var(--line);}
+  .nav-panel a:last-child{border-bottom:0;}
+  .nav-panel .nav-panel-mail{font-size:14px;color:var(--coral-dark);}
+}
+@media (max-width:600px){
+  .nav .nav-actions .btn{display:none;}
+  .nav .icon-search{display:none;}
+  .nav-brand span{font-size:17px;}
+}

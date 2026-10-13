@@ -126,3 +126,48 @@
     }
   });
 })();
+
+// ---------- mobile menu (hamburger) ----------
+(function () {
+  function init() {
+    var nav = document.querySelector('nav.nav');
+    var actions = nav && nav.querySelector('.nav-actions');
+    if (!actions || nav.querySelector('.nav-burger')) return;
+    var links = [
+      ['Shop all styles', '/#bestsellers'],
+      ['Download catalog (PDF)', 'catalog.html'],
+      ['Request invoice / bulk quote', 'rfq.html'],
+      ['Shipping', 'shipping.html'],
+      ['Returns', 'returns.html'],
+      ['FAQ', 'faq.html'],
+      ['About', 'about.html'],
+      ['Contact', 'contact.html']
+    ];
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'nav-burger';
+    btn.setAttribute('aria-label', 'Menu');
+    btn.setAttribute('aria-expanded', 'false');
+    btn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2B2320" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
+    actions.appendChild(btn);
+    var panel = document.createElement('div');
+    panel.className = 'nav-panel';
+    panel.hidden = true;
+    var html = '';
+    links.forEach(function (l) { html += '<a href="' + l[1] + '">' + l[0] + '</a>'; });
+    html += '<a href="mailto:support@wholesalesquishy.com" class="nav-panel-mail">support@wholesalesquishy.com</a>';
+    panel.innerHTML = html;
+    nav.appendChild(panel);
+    function set(open) {
+      panel.hidden = !open;
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.innerHTML = open
+        ? '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2B2320" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>'
+        : '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2B2320" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
+    }
+    btn.addEventListener('click', function () { set(panel.hidden); });
+    panel.addEventListener('click', function (e) { if (e.target.tagName === 'A') set(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
