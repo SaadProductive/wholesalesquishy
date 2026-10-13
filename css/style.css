@@ -140,3 +140,20 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif;}
 .ship-bar a{color:#fff;text-decoration:underline;font-weight:500;opacity:.85;}
 .ship-pill{display:flex;align-items:center;gap:10px;background:#E4F0E2;border:1px solid #BCD9B8;color:#2F5A32;border-radius:14px;padding:12px 14px;font-size:14px;font-weight:700;line-height:1.4;}
 @media(max-width:640px){.ship-bar{font-size:12.5px;padding:8px 10px;}}
+
+/* homepage product grid: keep 2 columns on phones so more products fit per screen */
+@media (max-width:600px){
+  .rg.product-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:10px !important;}
+  .product-grid .card{border-radius:14px;}
+  .product-grid .card-img{aspect-ratio:4/3;background:#fff !important;}
+  .product-grid .card-img img{object-fit:contain;object-position:center;}
+  .product-grid .card-body{padding:10px 10px 12px;gap:3px;}
+  .product-grid .eyebrow{font-size:9.5px;letter-spacing:.06em;}
+  .product-grid .card-body .display{font-size:14px !important;line-height:1.25;}
+  .product-grid .card-body a > div:nth-child(3){font-size:11.5px !important;}
+  .product-grid .price{font-size:18px !important;}
+  .product-grid .card-body a > div:nth-child(4) span:last-child{font-size:11px !important;}
+  .product-grid .card-body > div:last-child{margin-top:6px !important;}
+  .product-grid .qty{display:none;}
+  .product-grid .btn-sm{padding:8px 0;font-size:12px;}
+}
