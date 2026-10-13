@@ -27,6 +27,14 @@
   .policy a{font-weight:600;}
   .field{border:1.5px solid var(--line);border-radius:10px;padding:13px 14px;font-size:14px;font-family:'Plus Jakarta Sans';width:100%;background:#fff;margin-bottom:12px;}
 </style>
+<style>
+  @media (max-width:600px){
+    .policy{padding:24px 16px 90px !important;}
+    .policy h1{font-size:28px !important;}
+    #rfq-est{position:sticky;bottom:10px;z-index:5;box-shadow:0 6px 24px rgba(43,35,32,.2);}
+    #rfq-items img{width:56px !important;height:56px !important;}
+  }
+</style>
 <script src="js/analytics.js"></script>
 </head>
 <body>
@@ -57,7 +65,7 @@
 
 <div class="policy" style="max-width:860px;">
   <h1 class="display">Request a Bulk Quote</h1>
-  <div class="updated">For large orders. We reply within 1 business day with your quote and an invoice you can pay by card or bank transfer.</div>
+  <div class="updated">For large orders. We reply within 1 business day with your quote and an invoice (Stripe, Wise or US bank transfer). Payment in full before shipping.</div>
 
   <form id="rfq-form" onsubmit="return submitRfq(event);">
     <h2>1. What do you need?</h2>
@@ -82,9 +90,9 @@
 
     <h2>4. Payment &amp; notes</h2>
     <select class="field" id="q-payment">
-      <option>Pay invoice by card</option>
-      <option>Pay invoice by bank transfer (ACH)</option>
-      <option>Request an invoice (Stripe / Wise / US bank)</option>
+      <option>Stripe invoice (card or bank)</option>
+      <option>Wise transfer</option>
+      <option>US bank transfer (ACH / wire)</option>
     </select>
     <label style="display:flex;gap:8px;align-items:center;font-size:14px;color:var(--ink-soft);margin:0 0 12px 0;"><input type="checkbox" id="q-resale"> I have a resale certificate</label>
     <textarea class="field" id="q-notes" rows="4" placeholder="Anything else? Deadline, mixed styles, questions about safety documents"></textarea>
@@ -102,8 +110,9 @@ function renderRfqItems() {
   box.innerHTML = Object.keys(WSQ.CATALOG).map(sku => {
     const c = WSQ.CATALOG[sku], out = c.inStock === false;
     return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);">
-      <div style="flex:1;font-size:14px;color:var(--ink);"><b>${c.title.replace(/, \d+pc case$/, '')}</b><br><span style="font-size:12.5px;color:var(--ink-soft);">${sku} &middot; ${c.caseSize} pcs/case &middot; from ${WSQ.money(c.price)}/pc${out ? ' &middot; <b style="color:var(--coral-dark);">out of stock</b>' : ''}</span></div>
-      <input type="number" min="0" step="1" value="${out ? 0 : (CASES_FROM_CART[sku] || '')}" placeholder="0" ${out ? 'disabled' : ''} data-sku="${sku}" data-case="${c.caseSize}" style="width:84px;border:1.5px solid var(--line);border-radius:10px;padding:10px;font-size:14px;" oninput="rfqEstimate()"> <span style="font-size:13px;color:var(--ink-soft);">cases</span></div>`;
+      <img src="images/${sku.toLowerCase()}-thumb.webp" alt="" width="64" height="64" loading="lazy" style="width:64px;height:64px;flex:none;object-fit:contain;border-radius:10px;background:#fff;border:1px solid var(--line);">
+      <div style="flex:1;min-width:0;font-size:14px;color:var(--ink);"><b>${c.title.replace(/, \d+pc case$/, '')}</b><br><span style="font-size:12.5px;color:var(--ink-soft);">${sku} &middot; ${c.caseSize} pcs/case &middot; from ${WSQ.money(c.price)}/pc${out ? ' &middot; <b style="color:var(--coral-dark);">out of stock</b>' : ''}</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;flex:none;"><input type="number" min="0" step="1" value="${out ? 0 : (CASES_FROM_CART[sku] || '')}" placeholder="0" ${out ? 'disabled' : ''} data-sku="${sku}" data-case="${c.caseSize}" inputmode="numeric" style="width:64px;flex:none;border:1.5px solid var(--line);border-radius:10px;padding:10px;font-size:16px;text-align:center;" oninput="rfqEstimate()"><span style="font-size:11px;color:var(--ink-soft);margin-top:3px;">cases</span></div></div>`;
   }).join('');
   rfqEstimate();
 }

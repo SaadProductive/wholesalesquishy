@@ -26,12 +26,13 @@
   .line-item-title{font-weight:700;font-size:15px;line-height:1.35;}
   .line-item-cat{font-size:12.5px;color:var(--ink-soft);margin-top:3px;}
   .line-item-bottom{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
-  .line-item-price{font-family:'Baloo 2';font-weight:700;font-size:17px;color:var(--coral-dark);flex-shrink:0;}
+  .line-item-price{font-family:'Baloo 2','Plus Jakarta Sans',system-ui,sans-serif;font-weight:700;font-size:17px;color:var(--coral-dark);flex-shrink:0;}
   .remove-link{font-size:12.5px;color:var(--ink-soft);text-decoration:underline;cursor:pointer;transition:color .15s ease;flex-shrink:0;white-space:nowrap;}
   .remove-link:hover{color:var(--coral-dark);}
   .addon-card{background:var(--card);border:1.5px dashed var(--line);border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;transition:border-color .15s ease;min-width:0;}
   .addon-card:hover{border-color:var(--coral);}
   .addon-plus{width:26px;height:26px;border-radius:999px;background:var(--coral);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;cursor:pointer;border:none;flex-shrink:0;}
+  @media (max-width:600px){.addon-plus{width:44px;height:44px;font-size:20px;}.line-remove,.remove-btn{min-height:44px;}}
   @media (max-width:480px){.addon-grid{grid-template-columns:minmax(0,1fr) !important;}}
 </style>
 <script src="js/analytics.js"></script>

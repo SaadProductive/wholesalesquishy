@@ -31,7 +31,7 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif;}
 .nav{display:flex;align-items:center;justify-content:space-between;padding:20px 64px;border-bottom:1px solid var(--line);background:var(--cream);position:sticky;top:0;z-index:50;}
 .nav-brand{display:flex;align-items:center;gap:10px;}
 .nav-brand img{width:34px;height:34px;}
-.nav-brand span{font-family:'Baloo 2';font-size:24px;font-weight:700;letter-spacing:-0.3px;}
+.nav-brand span{font-family:'Baloo 2','Plus Jakarta Sans',system-ui,sans-serif;font-size:24px;font-weight:700;letter-spacing:-0.3px;}
 .nav-links{display:flex;align-items:center;gap:36px;}
 .nav-links a{font-size:15px;font-weight:600;color:var(--ink);transition:color .15s ease;}
 .nav-links a:hover{color:var(--coral-dark);}
@@ -40,7 +40,7 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif;}
 .cart-count{position:absolute;top:-8px;right:-8px;background:var(--coral);color:#fff;font-size:10px;font-weight:800;width:16px;height:16px;border-radius:999px;display:flex;align-items:center;justify-content:center;}
 
 /* buttons */
-.btn{display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:999px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans';transition:transform .15s ease, box-shadow .15s ease, background .15s ease;}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:999px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',system-ui,sans-serif;transition:transform .15s ease, box-shadow .15s ease, background .15s ease;}
 .btn-primary{background:var(--coral);color:#fff;padding:16px 30px;font-size:16px;}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(241,88,59,0.35);}
 .btn-dark{background:var(--ink);color:#fff;padding:16px 30px;font-size:15px;}
@@ -55,7 +55,7 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif;}
 .qty{display:inline-flex;align-items:center;border:1.5px solid var(--line);border-radius:999px;overflow:hidden;}
 .qty button{width:30px;height:34px;border:none;background:transparent;font-size:16px;font-weight:700;cursor:pointer;transition:background .15s ease;}
 .qty button:hover{background:var(--coral-tint);}
-.qty input{width:52px;text-align:center;font-weight:700;font-size:13px;border:none;background:transparent;font-family:'Plus Jakarta Sans';}
+.qty input{width:52px;text-align:center;font-weight:700;font-size:13px;border:none;background:transparent;font-family:'Plus Jakarta Sans',system-ui,sans-serif;}
 .qty input:focus{outline:none;}
 
 /* cards */
@@ -65,7 +65,7 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif;}
 .card-img img{width:100%;height:100%;max-width:none;object-fit:cover;object-position:center 8%;}
 .card-body{padding:20px;display:flex;flex-direction:column;gap:8px;}
 .eyebrow{font-size:12px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.8px;}
-.price{font-family:'Baloo 2';font-size:20px;font-weight:700;color:var(--coral-dark);}
+.price{font-family:'Baloo 2','Plus Jakarta Sans',system-ui,sans-serif;font-size:20px;font-weight:700;color:var(--coral-dark);}
 
 /* badges */
 .badge{display:inline-flex;align-items:center;gap:8px;background:var(--sage-tint);border-radius:999px;padding:8px 16px;font-size:13px;font-weight:700;color:#3D6B40;width:fit-content;}
@@ -156,4 +156,17 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif;}
   .product-grid .card-body > div:last-child{margin-top:6px !important;}
   .product-grid .qty{display:none;}
   .product-grid .btn-sm{padding:8px 0;font-size:12px;}
+}
+input,select,textarea{font-family:inherit;}
+/* buttons & form controls: inherit site font (browsers default to serif/system) */
+
+/* mobile tap targets (>=44px) and no iOS zoom on inputs */
+@media (max-width:600px){
+  .icon-btn{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;}
+  .nav .btn{padding:0 16px;min-height:44px;font-size:14px;white-space:nowrap;}
+  .btn-primary,.btn-ghost{min-height:48px;}
+  .btn-sm,.product-grid .btn-sm{min-height:44px;padding:0 8px;}
+  .qty button{width:44px;height:44px;}
+  .qty input{height:44px;font-size:16px;}
+  input,select,textarea{font-size:16px;}
 }

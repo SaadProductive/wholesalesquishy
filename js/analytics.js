@@ -112,8 +112,8 @@
       bar.id = 'wsq-consent';
       bar.setAttribute('role', 'dialog'); bar.setAttribute('aria-label', 'Cookie notice');
       bar.innerHTML = '<div style="font-size:13px;line-height:1.5;color:#2B2320;">We use cookies for analytics and to measure our ads. <a href="privacy.html" style="color:#D6431F;font-weight:600;">Privacy policy</a></div>' +
-        '<div style="display:flex;gap:8px;margin-top:10px;"><button type="button" data-c="granted" style="flex:1;background:#F1583B;color:#fff;border:none;border-radius:999px;padding:9px 0;font-weight:700;font-size:13px;cursor:pointer;">OK</button>' +
-        '<button type="button" data-c="denied" style="flex:1;background:transparent;color:#2B2320;border:1.5px solid #EADFCF;border-radius:999px;padding:9px 0;font-weight:700;font-size:13px;cursor:pointer;">Decline</button></div>';
+        '<div style="display:flex;gap:8px;margin-top:10px;"><button type="button" data-c="granted" style="flex:1;background:#F1583B;color:#fff;border:none;border-radius:999px;padding:13px 0;font-weight:700;font-size:14px;cursor:pointer;">OK</button>' +
+        '<button type="button" data-c="denied" style="flex:1;background:transparent;color:#2B2320;border:1.5px solid #EADFCF;border-radius:999px;padding:13px 0;font-weight:700;font-size:14px;cursor:pointer;">Decline</button></div>';
       bar.style.cssText = 'position:fixed;left:16px;bottom:16px;max-width:340px;background:#FFFDF9;border:1px solid #EADFCF;border-radius:16px;box-shadow:0 12px 30px rgba(43,35,32,.16);padding:14px 16px;z-index:290;font-family:inherit;';
       if (window.innerWidth < 640) bar.style.cssText += 'right:16px;max-width:none;';
       bar.addEventListener('click', function (e) {
