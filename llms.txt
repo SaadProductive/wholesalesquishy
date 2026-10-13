@@ -1,9 +1,9 @@
 # Wholesale Squishy
 
-> US wholesale supplier of squishy toys sold by the case (6 or 12 pieces per case) to retailers, gift and novelty shops, scoop/vending machine operators and procurement buyers. Ships from South Gate, California; orders processed immediately, delivery within 5 working days. US shipping only.
+> US wholesale supplier of squishy toys sold by the case (6 to 24 pieces per case) to retailers, gift and novelty shops, scoop/vending machine operators and procurement buyers. Ships from South Gate, California; orders processed immediately, delivery within 5 working days. US shipping only.
 
 ## Key facts
-- No minimum order value: the smallest order is one case (6 or 12 pieces), mix any styles.
+- No minimum order value: the smallest order is one case (6 to 24 pieces), mix any styles.
 - Volume pricing by total pieces in the order: 50+ pcs 6.2% off, 100+ 9.9%, 250+ 12%, 500+ 12.9%, 1000+ 13.5%.
 - Shipping: about $12 + $2.50 per case (ground, tracked). Free standard shipping on orders from $5,000 to $15,000. Freight quoted separately above $15,000.
 - Payment: card via Stripe checkout. Larger orders: request a quote.
@@ -12,6 +12,14 @@
 
 ## Pages
 - [Home and catalog](https://wholesalesquishy.com/)
+- [Hamburger Fidget Spinner (new)](https://wholesalesquishy.com/hamburger-fidget-spinner.html)
+- [Squish Cube, Fidget Sensory](https://wholesalesquishy.com/squish-cube-fidget-sensory.html)
+- [Dumpling Small Squishy, Mini](https://wholesalesquishy.com/dumpling-small-squishy-mini.html)
+- [Dumpling Medium Squishy, Collectible Food](https://wholesalesquishy.com/dumpling-medium-squishy-collectible-food.html)
+- [Dumpling Medium Squishy, Soft Squeeze](https://wholesalesquishy.com/dumpling-medium-squishy-soft-squeeze.html)
+- [Dumpling Medium Squishy, Kawaii](https://wholesalesquishy.com/dumpling-medium-squishy-kawaii.html)
+- [Octopus Squishy](https://wholesalesquishy.com/octopus-squishy.html)
+- [Chocolate Squishy](https://wholesalesquishy.com/chocolate-squishy.html)
 - [About](https://wholesalesquishy.com/about.html)
 - [FAQ](https://wholesalesquishy.com/faq.html)
 - [Shipping policy](https://wholesalesquishy.com/shipping.html)

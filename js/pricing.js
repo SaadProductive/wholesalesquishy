@@ -33,7 +33,15 @@
     'T-YG201':    { title: 'Dumpling Medium Squishy, Mystery Color, 12pc case', price: 3.85, caseSize: 12 },
     'YT0033':     { title: 'Butter Stick Squishy, Realistic Shape, 12pc case', price: 6.15,  caseSize: 12 },
     'T-2435':     { title: 'Strawberry Butter Big Squishy, 12pc case',         price: 6.15,  caseSize: 12 },
-    'NM103':      { title: 'Jumbo Bun Dumpling Squishy, 6pc case',             price: 18.46, caseSize: 6 }
+    'NM103':      { title: 'Jumbo Bun Dumpling Squishy, 6pc case',             price: 18.46, caseSize: 6 },
+    'A3DC9DEE5C87': { title: 'Hamburger Fidget Spinner, 12pc case', price: 3.85, caseSize: 12 },
+    'JF-2843': { title: 'Squish Cube, Fidget Sensory, 12pc case', price: 2.31, caseSize: 12 },
+    'NM102': { title: 'Dumpling Small Squishy, Mini, 24pc case', price: 1.93, caseSize: 24 },
+    'HY07': { title: 'Dumpling Medium Squishy, Collectible Food, 12pc case', price: 2.31, caseSize: 12 },
+    'YT666': { title: 'Dumpling Medium Squishy, Soft Squeeze, 12pc case', price: 2.31, caseSize: 12 },
+    'T6611': { title: 'Dumpling Medium Squishy, Kawaii, 12pc case', price: 3.85, caseSize: 12 },
+    'A-200': { title: 'Octopus Squishy, 24pc case', price: 3.08, caseSize: 24 },
+    'T2440': { title: 'Chocolate Squishy, 12pc case', price: 3.08, caseSize: 12 }
   };
 
   const money = (n) => '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
