@@ -90,6 +90,16 @@
       track('view_item', { ecommerce: { currency: CURRENCY, value: money(c.dataset.price), items: [{ item_id: c.dataset.sku, item_name: c.dataset.title, item_category: c.dataset.category, price: money(c.dataset.price) }] } });
     }
 
+    // catalog downloads and invoice / quote button clicks
+    document.addEventListener('click', function (e) {
+      var t = e.target.closest && e.target.closest('a[data-cta], a[href$=".pdf"]');
+      if (!t) return;
+      var cta = t.getAttribute('data-cta');
+      var href = t.getAttribute('href') || '';
+      if (href.slice(-4) === '.pdf') track('file_download', { file_name: href.split('/').pop(), link_url: href });
+      if (cta) track('cta_click', { cta_name: cta, link_url: href });
+    });
+
     // email / phone clicks
     document.addEventListener('click', function (e) {
       const a = e.target.closest && e.target.closest('a[href^="mailto:"], a[href^="tel:"]');
