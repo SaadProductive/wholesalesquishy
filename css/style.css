@@ -187,3 +187,17 @@ input,select,textarea{font-family:inherit;}
   .nav .icon-search{display:none;}
   .nav-brand span{font-size:17px;}
 }
+
+/* homepage mobile: shorter hero, inline buttons, products first */
+.t-short{display:none;}
+@media (max-width:600px){
+  .t-long{display:none;}
+  .t-short{display:inline;}
+  .hero-thumb{display:none !important;}
+  .hero-cta{flex-wrap:nowrap !important;gap:8px !important;}
+  .hero-cta .btn{flex:1 1 0;min-width:0;padding:0 6px !important;font-size:14px !important;white-space:nowrap;}
+  .grid-cta{flex-wrap:nowrap !important;gap:8px !important;width:100%;}
+  .grid-cta .btn{flex:1 1 0;min-width:0;padding:0 6px !important;font-size:13px !important;min-height:44px;white-space:nowrap;}
+  #bestsellers{padding-top:24px !important;}
+  #bestsellers > div:first-child{margin-bottom:16px !important;}
+}
