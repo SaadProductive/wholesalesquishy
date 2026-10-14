@@ -10,6 +10,12 @@ function getCart() {
   }
   // always show catalog prices (shared with the server) even if an old cart is in storage
   if (typeof WSQ !== 'undefined') {
+    // drop items whose SKU is no longer in the catalog (old carts would block checkout)
+    const valid = cart.filter(i => i && WSQ.CATALOG[i.sku]);
+    if (valid.length !== cart.length) {
+      cart = valid;
+      try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch (e) {}
+    }
     const total = cart.reduce((n, i) => n + (Number(i.qty) || 0), 0);
     cart.forEach(i => {
       const c = WSQ.CATALOG[i.sku];
