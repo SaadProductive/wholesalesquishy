@@ -19,6 +19,9 @@ const STATUSES = ['New', 'Confirmed', 'Packing', 'Shipped', 'Delivered', 'On hol
 const STATUS_COLORS = { 'New': [1, 0.95, 0.7], 'Confirmed': [0.8, 0.9, 1], 'Packing': [1, 0.85, 0.7], 'Shipped': [0.75, 0.93, 0.78], 'Delivered': [0.6, 0.85, 0.65], 'On hold': [0.9, 0.9, 0.9], 'Out of stock': [1, 0.78, 0.78] };
 
 // One row per product line. Admin sheet = everything (money, payment). Warehouse sheet = no prices/payment.
+// Sheets (USER_ENTERED) turns "07450" into 7450; a leading apostrophe keeps it as text
+const txt = (v) => (v && /^\d+$/.test(String(v)) ? "'" + v : v);
+
 const SHEETS = {
   admin: {
     env: 'GOOGLE_SHEET_ID', urlEnv: 'SHEETS_SCRIPT_URL', keyCol: 1, statusCol: 'Status',
@@ -26,7 +29,7 @@ const SHEETS = {
       'Product', 'SKU', 'Image', 'Cases', 'Pieces', 'Price / pc', 'Line total', 'Order subtotal', 'Shipping', 'Order total', 'Payment method', 'Payment status',
       'Status', 'Tracking #', 'Notes'],
     widths: [135, 110, 140, 190, 110, 140, 170, 90, 100, 60, 70, 60, 260, 90, 110, 60, 70, 80, 90, 95, 80, 95, 140, 100, 110, 140, 200],
-    row: (o, l) => [o.date, o.shortId, o.name, o.email, o.phone, o.shipName, o.a1, o.a2, o.city, o.state, o.zip, o.country,
+    row: (o, l) => [o.date, o.shortId, o.name, o.email, o.phone, o.shipName, o.a1, o.a2, o.city, o.state, txt(o.zip), o.country,
       l.title, l.sku, l.image, l.cases, l.pieces, l.unit, l.total, o.subtotal, o.shipping, o.orderTotal, o.method, o.payStatus, 'New', '', '']
   },
   warehouse: {
@@ -34,7 +37,7 @@ const SHEETS = {
     headers: ['Order ID', 'Order date', 'Ship to', 'Address 1', 'Address 2', 'City', 'State', 'ZIP',
       'Product', 'SKU', 'Image', 'Cases', 'Pieces', 'Status', 'Carrier', 'Tracking #', 'Notes', 'Buyer emailed'],
     widths: [110, 95, 150, 180, 90, 100, 60, 70, 260, 90, 110, 60, 70, 110, 100, 150, 200, 130],
-    row: (o, l) => [o.shortId, o.date.slice(0, 10), o.shipName, o.a1, o.a2, o.city, o.state, o.zip,
+    row: (o, l) => [o.shortId, o.date.slice(0, 10), o.shipName, o.a1, o.a2, o.city, o.state, txt(o.zip),
       l.title, l.sku, l.image, l.cases, l.pieces, 'New', '', '', '', '']
   }
 };
