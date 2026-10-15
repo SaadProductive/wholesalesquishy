@@ -82,10 +82,7 @@
     else if (params) Object.keys(params).forEach(function (k) { payload[k] = params[k]; });
     window.dataLayer.push(payload);
     try { metaEvent(event, payload.ecommerce); } catch (e) {}
-    // Events that GTM's trigger list does not cover go straight to GA4 through the Google tag (with all parameters).
-    if (DIRECT_GA4[event]) { var gp = {}; Object.keys(payload).forEach(function (k) { if (k !== 'event') gp[k] = payload[k]; }); gtag('event', event, gp); }
   }
-  var DIRECT_GA4 = { search: 1, search_no_results: 1, select_search_result: 1, file_download: 1, cta_click: 1 };
   window.wsqTrack = track;
   window.wsqItems = toItems;
   window.wsqCurrency = CURRENCY;
