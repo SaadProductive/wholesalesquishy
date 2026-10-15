@@ -32,10 +32,20 @@
 
   // ---------- load GTM ----------
   if (GTM_ID.indexOf('XXXX') === -1) {
+    // Third-party tags are loaded on first interaction or 3.5s after page load, so they never block first paint / input.
     window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
-    const s = document.createElement('script');
-    s.async = true; s.src = 'https://www.googletagmanager.com/gtm.js?id=' + GTM_ID;
-    document.head.appendChild(s);
+    var thirdLoaded = false;
+    var loadThird = function () {
+      if (thirdLoaded) return; thirdLoaded = true;
+      ['scroll', 'pointerdown', 'keydown', 'touchstart', 'mousemove'].forEach(function (ev) { window.removeEventListener(ev, loadThird); });
+      const s = document.createElement('script');
+      s.async = true; s.src = 'https://www.googletagmanager.com/gtm.js?id=' + GTM_ID;
+      document.head.appendChild(s);
+      if (window.__fbsrc) { const t = document.createElement('script'); t.async = true; t.src = window.__fbsrc; document.head.appendChild(t); }
+    };
+    ['scroll', 'pointerdown', 'keydown', 'touchstart', 'mousemove'].forEach(function (ev) { window.addEventListener(ev, loadThird, { once: true, passive: true }); });
+    window.addEventListener('load', function () { setTimeout(loadThird, 3500); });
+    window.__wsqLoadThird = loadThird;
   }
 
 
@@ -43,8 +53,7 @@
   const META_PIXEL_ID = '1135846015541716';
   if (META_PIXEL_ID) {
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;
-    s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];f.__fbsrc=v}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
     if (state === 'denied') fbq('consent', 'revoke');
     fbq('init', META_PIXEL_ID);
     fbq('track', 'PageView');
@@ -73,7 +82,10 @@
     else if (params) Object.keys(params).forEach(function (k) { payload[k] = params[k]; });
     window.dataLayer.push(payload);
     try { metaEvent(event, payload.ecommerce); } catch (e) {}
+    // Events that GTM's trigger list does not cover go straight to GA4 through the Google tag (with all parameters).
+    if (DIRECT_GA4[event]) { var gp = {}; Object.keys(payload).forEach(function (k) { if (k !== 'event') gp[k] = payload[k]; }); gtag('event', event, gp); }
   }
+  var DIRECT_GA4 = { search: 1, search_no_results: 1, select_search_result: 1, file_download: 1, cta_click: 1 };
   window.wsqTrack = track;
   window.wsqItems = toItems;
   window.wsqCurrency = CURRENCY;
@@ -168,6 +180,39 @@
     btn.addEventListener('click', function () { set(panel.hidden); });
     panel.addEventListener('click', function (e) { if (e.target.tagName === 'A') set(false); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+
+// ---------- site search button (desktop + mobile); search.js loads on first tap ----------
+(function () {
+  function init() {
+    var nav = document.querySelector('nav.nav');
+    var actions = nav && nav.querySelector('.nav-actions');
+    if (!actions || actions.querySelector('.nav-search')) return;
+    var old = actions.querySelector('.icon-search');
+    if (old) old.remove();
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'nav-search';
+    b.setAttribute('aria-label', 'Search products');
+    b.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="#2B2320" stroke-width="2"/><path d="M21 21L16.5 16.5" stroke="#2B2320" stroke-width="2" stroke-linecap="round"/></svg>';
+    actions.insertBefore(b, actions.firstChild);
+    var loading = false;
+    function load(cb) {
+      if (window.wsqSearch) return cb();
+      if (loading) return;
+      loading = true;
+      var s = document.createElement('script');
+      s.src = '/js/search.js';
+      s.onload = cb;
+      document.head.appendChild(s);
+    }
+    b.addEventListener('pointerenter', function () { load(function () {}); }, { once: true });
+    b.addEventListener('click', function () { loading = false; load(function () { window.wsqSearch.open(); }); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === '/' && !window.wsqSearch && !/INPUT|TEXTAREA|SELECT/.test((document.activeElement || {}).tagName || '')) { e.preventDefault(); load(function () { window.wsqSearch.open(); }); }
+    });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
