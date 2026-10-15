@@ -18,14 +18,14 @@ Nothing below needs code. Secrets (passwords, keys) you paste yourself; never sh
 | `ADMIN_LINK_SECRET` | any long random string you invent (30+ characters) |
 | `GOOGLE_SHEET_ID` | `1rUhpfPH6E-JFFKLUNPnME4YIzLuzbeiiTB-4pyz0OHk` |
 | `WAREHOUSE_SHEET_ID` | `1mZJu1KzA10kmQTng6iLYjXKq1JzXLZ7EB9wgL378cY0` |
-| `GOOGLE_SERVICE_ACCOUNT_EMAIL` | `client_email` from the Google service-account JSON |
-| `GOOGLE_PRIVATE_KEY` | `private_key` from that JSON (keep the `\n` characters) |
+| `SHEETS_SCRIPT_URL` | the Web app URL from step D (free, no Google Cloud) |
+| `SHEETS_SCRIPT_TOKEN` | the same TOKEN text you put in the script properties in step D |
 | `STRIPE_SECRET_KEY` | already set |
 | `STRIPE_WEBHOOK_SECRET` | from step E |
 
 ## D. Google
-4. console.cloud.google.com: enable the Google Sheets API, create a service account, download its JSON key.
-5. Share both sheets (WSQ - Orders (Admin), WSQ - Warehouse) with the service account `client_email` as Editor.
+4. FREE, no Google Cloud: script.google.com, New project, paste `apps-script/order-receiver.gs`. Project Settings (gear), Script properties, add `TOKEN` = a long random text. Deploy, New deployment, type Web app, Execute as: Me, Who has access: Anyone, Deploy, approve. Copy the Web app URL.
+5. Put the URL in Vercel as `SHEETS_SCRIPT_URL` and the same random text as `SHEETS_SCRIPT_TOKEN`. Use the same Google account that owns both sheets.
 6. Warehouse sheet: Extensions, Apps Script, paste `apps-script/warehouse-shipping-emails.gs`, run `installTrigger`, approve.
 
 ## E. Stripe

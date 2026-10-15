@@ -83,3 +83,6 @@ One-time setup:
 4. Uses the same Gmail variables as the contact form (`GMAIL_USER`, `GMAIL_APP_PASSWORD`, `CONTACT_TO`) and `STRIPE_SECRET_KEY`.
 Test in Stripe test mode first with a small quote to your own email.
 Invoice links in the email expire after 14 days; clicking twice never creates two invoices. Forwarding the email forwards the buttons, so keep it private.
+
+## No Google Cloud? Use the free Apps Script receiver
+If Google Cloud asks for a card or is blocked, skip the service account (steps above) and the two GOOGLE_* variables. Instead: script.google.com, New project, paste `apps-script/order-receiver.gs`, Script properties: `TOKEN` = long random text, Deploy as Web app (Execute as: Me, Access: Anyone). In Vercel set `SHEETS_SCRIPT_URL` (the Web app URL) and `SHEETS_SCRIPT_TOKEN` (same text as TOKEN). Use the Google account that owns both sheets.

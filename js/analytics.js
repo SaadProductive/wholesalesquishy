@@ -201,7 +201,7 @@
       if (loading) return;
       loading = true;
       var s = document.createElement('script');
-      s.src = '/js/search.js?v=20261017';
+      s.src = '/js/search.js?v=20261018';
       s.onload = cb;
       document.head.appendChild(s);
     }
