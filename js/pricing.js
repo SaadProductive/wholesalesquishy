@@ -27,7 +27,7 @@
   // SKU -> server-trusted price per piece and case size (matches the product pages)
   const CATALOG = {
     'FR-34':      { title: 'Strawberry Pink Butter Squishy, 12pc case',        price: 2.31,  caseSize: 12 },
-    'WY-100':     { title: 'Dumpling Medium Squishy, Smiley Face, 12pc case',  price: 3.08,  caseSize: 12 },
+    'WY-100':     { title: 'Dumpling Medium Squishy, Smiley Face, 12pc case',  price: 3.08,  caseSize: 12, inStock: false }, // OUT OF STOCK: remove inStock:false when restocked
     'NM-100':     { title: 'Dumpling Medium Squishy, Printed Face, 12pc case', price: 3.08,  caseSize: 12 },
     'HYB-2861-2': { title: 'Butter Stick Squishy, 4oz Mixed Colors, 12pc case', price: 3.08, caseSize: 12, inStock: false }, // OUT OF STOCK: remove inStock:false when restocked
     'T-YG201':    { title: 'Dumpling Medium Squishy, Mystery Color, 12pc case', price: 3.85, caseSize: 12 },
