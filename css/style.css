@@ -220,3 +220,31 @@ input,select,textarea{font-family:inherit;}
 /* footer credit */
 .footer-credit{max-width:1440px;margin:0 auto;padding-top:10px;font-size:12.5px;color:#8A8078;}
 .footer .footer-credit a{display:inline;margin:0;font-size:inherit;color:#B7ACA1;text-decoration:underline;}
+
+/* product page mobile helpers (js/product.js) */
+.pp-chips,.pp-sum,.pp-buynow,.pp-more,.pp-sticky{display:none;}
+@media (max-width:700px){
+  .pp-chips{display:flex;gap:8px;}
+  .pp-chip{flex:1;min-height:44px;border:1.5px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font:800 14.5px 'Plus Jakarta Sans',system-ui,sans-serif;cursor:pointer;}
+  .pp-chip.on{border-color:var(--coral);background:var(--coral-tint);}
+  .pp-sum{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--ink-soft);border-top:1px dashed var(--line);padding-top:10px;}
+  .pp-buynow{display:block;width:100%;height:50px;border:2px solid var(--ink);border-radius:999px;background:#fff;color:var(--ink);font:800 15.5px 'Plus Jakarta Sans',system-ui,sans-serif;cursor:pointer;}
+  .pp-buynow:disabled{opacity:.6;}
+  .pp-more{display:block;border:0;background:none;color:var(--coral-dark);font:800 14.5px 'Plus Jakarta Sans',system-ui,sans-serif;min-height:44px;padding:0;text-align:left;cursor:pointer;}
+  .pp-desc{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:0 !important;}
+  .pp-desc.open{display:block;}
+  .pp-hero{height:340px !important;}
+  #gallery-thumbs{display:flex !important;overflow-x:auto;gap:10px !important;scrollbar-width:none;}
+  #gallery-thumbs .thumb{flex:0 0 68px;}
+  .pp-sticky{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:55;align-items:center;gap:12px;background:#FFFDF9;border-top:1px solid var(--line);box-shadow:0 -8px 24px rgba(43,35,32,.12);padding:10px 12px calc(12px + env(safe-area-inset-bottom));transform:translateY(115%);transition:transform .2s ease;}
+  .pp-sticky.show{transform:none;}
+  .pp-sticky-t{display:flex;flex-direction:column;line-height:1.25;min-width:0;}
+  .pp-sticky-t b{font:800 20px 'Baloo 2','Plus Jakarta Sans',system-ui,sans-serif;}
+  .pp-sticky-t span{font-size:12px;color:var(--ink-soft);}
+  .pp-sticky-b{flex:1;height:52px;border:0;border-radius:999px;background:var(--coral);color:#fff;font:800 16px 'Plus Jakarta Sans',system-ui,sans-serif;cursor:pointer;box-shadow:0 6px 16px rgba(241,88,59,.28);}
+  body.pp-has-bar{padding-bottom:76px;}
+}
+@media (max-width:700px){
+  .pricing-row{min-width:0 !important;grid-template-columns:repeat(3,minmax(0,1fr)) !important;}
+  .pricing-row .tier-col{border-bottom:1px solid var(--line);padding:14px 6px;}
+}

@@ -46,15 +46,7 @@
         "transitTime": {"@type": "QuantitativeValue", "minValue": 2, "maxValue": 6, "unitCode": "DAY"}
       }
     },
-    "hasMerchantReturnPolicy": {
-      "@type": "MerchantReturnPolicy",
-      "applicableCountry": "US",
-      "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
-      "merchantReturnDays": 30,
-      "returnMethod": "https://schema.org/ReturnByMail",
-      "returnFees": "https://schema.org/ReturnShippingFees"
-    }
-  }
+    "hasMerchantReturnPolicy": {"@type": "MerchantReturnPolicy", "applicableCountry": "US", "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted"}}
 }
 </script>
 <script type="application/ld+json">
@@ -69,7 +61,7 @@
 }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css?v=20261017">
 <style>
   .thumb{background:var(--card);border:2px solid var(--line);border-radius:14px;height:90px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .15s ease;}
   .thumb.active,.thumb:hover{border-color:var(--coral);}
@@ -77,14 +69,14 @@
   .related-card{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:transform .18s ease, box-shadow .18s ease;}
   .related-card:hover{transform:translateY(-4px);box-shadow:0 16px 30px rgba(43,35,32,0.10);}
 </style>
-<script src="js/analytics.js"></script>
+<script src="js/analytics.js?v=20261017"></script>
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M5HRM57B" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
-<div class="ship-bar"><b>Orders processed immediately</b> &middot; Delivery within 5 working days <a href="shipping.html">details</a></div>
+<div class="ship-bar"><b>Orders processed immediately</b> &middot; Delivery within 7 working days <a href="shipping.html">details</a></div>
 <nav class="nav">
   <a href="/" class="nav-brand"><img src="images/logo-mark.svg" alt="Wholesale Squishy logo"><span>Wholesale Squishy</span></a>
   <div class="nav-links">
@@ -151,14 +143,14 @@
       <button class="btn btn-primary" style="flex:1;padding:16px 0;font-size:16px;min-width:220px;" data-add-to-cart>Add Case to Cart &middot; $32.34</button>
     </div>
 
-    <div class="ship-pill" style="margin-top:14px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" style="flex:none"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z" stroke="#2F5A32" stroke-width="2" stroke-linejoin="round"/><circle cx="7" cy="17.5" r="1.8" fill="#2F5A32"/><circle cx="17" cy="17.5" r="1.8" fill="#2F5A32"/></svg><span>Orders processed immediately.<br><span style="font-weight:600;">Delivery within 5 working days (most US addresses).</span></span></div>
+    <div class="ship-pill" style="margin-top:14px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" style="flex:none"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z" stroke="#2F5A32" stroke-width="2" stroke-linejoin="round"/><circle cx="7" cy="17.5" r="1.8" fill="#2F5A32"/><circle cx="17" cy="17.5" r="1.8" fill="#2F5A32"/></svg><span>Orders processed immediately.<br><span style="font-weight:600;">Delivery within 7 working days (most US addresses).</span></span></div>
 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;"><a class="btn btn-ghost" data-cta="invoice_request" href="rfq.html" style="padding:11px 18px;font-size:14px;">Pay by invoice / bulk quote</a><a class="btn btn-ghost" data-cta="catalog_download" href="documents/Wholesale-Squishy-Catalog-2026.pdf" download style="padding:11px 18px;font-size:14px;">Download catalog (PDF)</a></div>
 <div style="margin-top:14px;padding:12px 14px;background:var(--cream-deep);border-radius:12px;font-size:13px;line-height:1.55;color:var(--ink-soft);"><b style="color:var(--ink);">Order terms:</b> No minimum order: start from 1 case, mix any styles. Shipping is about $12 + $2.50 per case, <b style="color:var(--ink);">free from $5,000</b>. Volume pricing applies from 50 pieces. Freight is quoted separately above $15,000. <a href="rfq.html" style="color:var(--coral-dark);font-weight:700;">Request a quote for invoices or large orders</a>.</div>
 
 
     <div style="display:flex;gap:22px;margin-top:10px;padding-top:20px;border-top:1px solid var(--line);flex-wrap:wrap;">
       <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-soft);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 21C12 21 4 15 4 9.5C4 6.5 6.5 4 9.5 4C11 4 12 5 12 5C12 5 13 4 14.5 4C17.5 4 20 6.5 20 9.5C20 15 12 21 12 21Z" stroke="var(--coral-dark)" stroke-width="2"/></svg>Reliable, consistent quality</div>
-      <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-soft);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 8H20L19 20H5L4 8Z" stroke="var(--coral-dark)" stroke-width="2" stroke-linejoin="round"/></svg>Delivery within 5 working days</div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-soft);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 8H20L19 20H5L4 8Z" stroke="var(--coral-dark)" stroke-width="2" stroke-linejoin="round"/></svg>Delivery within 7 working days</div>
       <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-soft);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 12L9 18L21 6" stroke="var(--coral-dark)" stroke-width="2" stroke-linecap="round"/></svg>Secure checkout</div>
     </div>
   </div>
@@ -235,11 +227,12 @@
     <div><h3>Policies</h3><a href="shipping.html">Shipping Policy</a><a href="returns.html">Return Policy</a><a href="refunds.html">Refund Policy</a><a href="terms.html">Terms &amp; Conditions</a><a href="privacy.html">Privacy Policy</a></div>
   </div>
   <div class="footer-bottom">&copy; 2026 Wholesale Squishy. All rights reserved. &middot; 12508 Center St, Suite 5, South Gate, CA 90280 &middot; <a href="mailto:support@wholesalesquishy.com" style="display:inline;color:#B7ACA1;font-size:13px;margin:0;">support@wholesalesquishy.com</a></div>
-  <div class="footer-credit">Developed &amp; marketed by <a href="https://productiveagency.com" target="_blank" rel="nofollow noopener noreferrer">Productive Digital</a> &middot; productiveagency.com</div>
+  <div class="footer-credit" style="max-width:1440px;margin:0 auto;padding-top:10px;font-size:12.5px;line-height:1.5;color:#8A8078;">Developed &amp; marketed by <a href="https://productiveagency.com" target="_blank" rel="nofollow noopener noreferrer" style="display:inline;margin:0;font-size:inherit;color:#B7ACA1;text-decoration:underline;">Productive Digital</a> &middot; productiveagency.com</div>
 </footer>
 
-<script src="js/pricing.js"></script>
-<script src="js/cart.js"></script>
+<script src="js/pricing.js?v=20261017"></script>
+<script src="js/cart.js?v=20261017"></script>
+<script src="js/product.js?v=20261017"></script>
 <script>
 // Extra REAL photos: drop files named images/gallery/<sku>-2.jpg ... -6.jpg (sku in lowercase) and they appear here automatically.
 document.addEventListener('DOMContentLoaded', function () {
