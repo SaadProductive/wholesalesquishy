@@ -216,3 +216,7 @@ input,select,textarea{font-family:inherit;}
   .nav-brand img{width:26px;height:26px;}
   .nav{padding:10px 8px;}
 }
+
+/* footer credit */
+.footer-credit{max-width:1440px;margin:0 auto;padding-top:10px;font-size:12.5px;color:#8A8078;}
+.footer .footer-credit a{display:inline;margin:0;font-size:inherit;color:#B7ACA1;text-decoration:underline;}
