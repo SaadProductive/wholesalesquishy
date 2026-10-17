@@ -57,12 +57,13 @@ module.exports = async (req, res) => {
           display_name: calc.label,
           delivery_estimate: {
             minimum: { unit: 'business_day', value: 3 },
-            maximum: { unit: 'business_day', value: 8 }
+            maximum: { unit: 'business_day', value: 7 }
           }
         }
       }],
       shipping_address_collection: { allowed_countries: ['US'] },
       phone_number_collection: { enabled: true },
+      expires_at: Math.floor(Date.now() / 1000) + 31 * 60,
       metadata: { skus: skuSummary, boxes: String(calc.boxes), pieces: String(calc.pieces) },
       payment_intent_data: { metadata: { skus: skuSummary } },
       success_url: `${origin}/success.html?session_id={CHECKOUT_SESSION_ID}`,

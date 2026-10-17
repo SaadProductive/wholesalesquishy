@@ -161,7 +161,7 @@ async function emailConfirmation(order, lines) {
   const addr = [order.shipName, order.a1, order.a2, `${order.city}, ${order.state} ${order.zip}`].filter(Boolean).map(esc).join('<br>');
   const html = `<div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:0 auto;color:#2B2320;">
   <h2 style="margin:0 0 6px 0;">Thank you for your order${order.name ? ', ' + esc(order.name.split(' ')[0]) : ''}!</h2>
-  <p style="margin:0 0 16px 0;color:#6b5f57;">Order <b>#${esc(order.shortId)}</b> is confirmed and being processed immediately. Delivery within 5 working days for most US addresses (up to 8 to distant states). We will email your tracking number as soon as it ships.</p>
+  <p style="margin:0 0 16px 0;color:#6b5f57;">Order <b>#${esc(order.shortId)}</b> is confirmed and being processed immediately. Delivery within 7 working days for most US addresses. We will email your tracking number as soon as it ships.</p>
   <table style="width:100%;border-collapse:collapse;font-size:14px;">${rowsHtml}
     <tr><td style="padding:8px 0;color:#6b5f57;">Subtotal</td><td style="text-align:right;">$${esc(order.subtotal)}</td></tr>
     <tr><td style="padding:4px 0;color:#6b5f57;">Shipping</td><td style="text-align:right;">${Number(order.shipping) === 0 ? 'FREE' : '$' + esc(order.shipping)}</td></tr>
@@ -173,11 +173,32 @@ async function emailConfirmation(order, lines) {
   const text = `Thank you for your order! Order #${order.shortId} is confirmed and being processed immediately.\n` +
     real.map((l) => `- ${l.title}: ${l.cases} case(s), ${l.pieces} pcs, $${l.total}`).join('\n') +
     `\nSubtotal $${order.subtotal} | Shipping $${order.shipping} | Total $${order.orderTotal}\n` +
-    `Delivery within 5 working days for most US addresses. We will email tracking when it ships.\nQuestions: ${support}`;
+    `Delivery within 7 working days for most US addresses. We will email tracking when it ships.\nQuestions: ${support}`;
   const tx = nodemailer.createTransport({ service: 'gmail', auth: { user, pass } });
   await tx.sendMail({ from: `"Wholesale Squishy" <${user}>`, to: order.email, bcc: process.env.CONTACT_TO || undefined, replyTo: support,
     subject: `Order #${order.shortId} confirmed - Wholesale Squishy`, text, html });
   return 'sent';
+}
+
+// ---------- abandoned checkout: owner-only note (no email to the buyer) ----------
+async function notifyAbandoned(session, stripe) {
+  const user = process.env.GMAIL_USER, pass = process.env.GMAIL_APP_PASSWORD;
+  const to = process.env.CONTACT_TO || user;
+  const cd = session.customer_details || {};
+  if (!user || !pass || !to || !cd.email) return 'skipped (no buyer email entered)';
+  let items = '';
+  try {
+    const li = await stripe.checkout.sessions.listLineItems(session.id, { limit: 20 });
+    items = li.data.map((l) => `${l.description} x${l.quantity} pcs = $${(Number(l.amount_total) / 100).toFixed(2)}`).join('\n');
+  } catch (e) { items = (session.metadata && session.metadata.skus) || ''; }
+  const total = (Number(session.amount_total || 0) / 100).toFixed(2);
+  const when = new Date(session.created * 1000).toISOString().replace('T', ' ').slice(0, 16) + ' UTC';
+  const nodemailer = require('nodemailer');
+  const tx = nodemailer.createTransport({ service: 'gmail', auth: { user, pass } });
+  await tx.sendMail({ from: `"Wholesale Squishy site" <${user}>`, to, replyTo: cd.email,
+    subject: `Abandoned checkout $${total} - ${cd.name || cd.email}`,
+    text: `Someone left checkout without paying.\n\nName: ${cd.name || '-'}\nEmail: ${cd.email}\nPhone: ${cd.phone || '-'}\nWhen: ${when}\nCart total: $${total}\n\n${items}\n\nTip: reply to this email to write to the buyer (offer an invoice or help).` });
+  return 'owner notified';
 }
 
 async function logOrder(session, stripe) {
@@ -281,6 +302,17 @@ module.exports = async (req, res) => {
     return;
   }
 
+  // This Stripe account also serves other shops: ignore checkout sessions that were not created by this site (ours always carry metadata.skus)
+  if (event.type.indexOf('checkout.session.') === 0) {
+    const m = event.data.object && event.data.object.metadata;
+    if (!m || !m.skus) { res.status(200).json({ received: true, ignored: 'not a Wholesale Squishy session' }); return; }
+  }
+  // Abandoned checkout: silent. Only the shop owner gets a note; the buyer is never contacted.
+  if (event.type === 'checkout.session.expired') {
+    try { res.status(200).json({ received: true, abandoned: await notifyAbandoned(event.data.object, stripe) }); }
+    catch (err) { console.error('Abandoned note failed:', err && err.message); res.status(200).json({ received: true, abandoned: 'failed' }); }
+    return;
+  }
   if (event.type === 'checkout.session.completed' || event.type === 'checkout.session.async_payment_succeeded') {
     try {
       const result = await logOrder(event.data.object, stripe);
